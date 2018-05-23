@@ -1,0 +1,35 @@
+<tool id="KallistoAbundancestoGeneCountMatrix" name="KallistoAbundancestoGeneCountMatrix" version="1.0">
+  <description>Merge kallisto abundances to one counts matrix</description>
+  <command interpreter="Rscript --vanilla">KallistoAbundancestoGeneCountMatrix.R --output $txi --species $species --filepaths #for $input in $inputs# $input #end for# --filenames #for $input in $inputs# $input.name #end for#2&gt;&amp;1</command>
+  <inputs>
+    <param optional="false" name="inputs" type="data_collection" help="" label="[required] Inputfile1">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+    <param optional="false" name="species" type="select" help="" label="[required] Species" force_select="FALSE">
+      <validator type="empty_field" message="This field is required."/>
+      <option value="Human">Human</option>
+      <option value="Mouse">Mouse</option>
+	  <option value="Rat">Rat</option>
+<option value="Zebrafish">Zebrafish</option>
+<option value="Horse">Horse</option>
+<option value="Cow">Cow</option>
+<option value="Pig">Pig</option>
+    </param>
+  </inputs>
+  <outputs>
+    <data format="rdata" name="txi" label="txi"/>
+  </outputs>
+  <help>
+**Description**
+
+Merge a data collection of transcript kallisto abundances to a gene level counts matrix.
+
+Input
+A data collection of kallisto abundances
+Species
+
+Output
+A list of data frames suitable for import to DESeq2 stored as a rdata file
+
+</help>
+</tool>

@@ -1,0 +1,79 @@
+\name{PCARNASeq}
+
+\alias{PCARNASeq}
+\title{PCA for RNASeq data}
+
+\description{
+Performs PCA on RNASeq data
+
+Input
+An R list stored as rdata (from KallistoAbundancestoGeneCountMatrix)
+
+An sampleTable txt file detailing the sample names and the experimental factor in the format:
+
+  \tabular{ccc}{
+  SampleName \tab Condition1 \tab Condition2\cr
+  Control_1 \tab Batch1 \tab Control \cr
+  Mutant_1 \tab Batch2  \tab Mutant
+  }
+Species - either "Human" or "Mouse"
+
+
+Output: 
+a PCA plot
+a txt file of the contribution of each gene to each PC.
+
+}
+
+\usage{
+PCARNASeq<-function(
+txiData=GalaxyInputFile(required=T,formatFilter="rdata"),
+sampleTable=GalaxyInputFile(required=T,formatFilter="tabular"),
+species=GalaxySelectParam(c("Human","Mouse"),required=T),
+technicalReplicates=GalaxyLogicalParam(),
+pcaPlot=GalaxyOutput("PCA", "jpg"),
+geneInfluence=GalaxyOutput("geneInfluence","tabular"))
+}
+
+\arguments{
+  \item{txiData}{
+    A list generated from the KallistoAbundancestoGeneCountMatrix module stored as rdata
+  }
+  \item{sampleTable}{
+    Am sampleTable txt file detailing the sample names and the experimental factor in the format
+  }
+  \item{species}{
+    Species either Human or Mouse
+  }
+  \item{technicalReplicates}{
+    Logical - does the dataset contain experimental replicates to be collpased. Uses the first two factors defined in the sampleTable to determine the technical replicates.
+  }
+  \item{pcaPlot}{
+    PCA plot
+  }
+  \item{geneInfluence}{
+    A gene influence tabular text file
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+t2 <- tempfile()
+
+PCARNASeq(
+txiData=sourcefile1,
+sampleTable=sourcefile2,
+species="Human",
+pcaPlot=t,
+geneInfluence=t2)
+
+}

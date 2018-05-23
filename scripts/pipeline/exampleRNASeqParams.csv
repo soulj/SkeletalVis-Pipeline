@@ -1,0 +1,3 @@
+accessionNumber,site,ENA,species,platform,foldChangeOnly,stranded,single,technicalReplicates,batchCorrect,supervised
+E-GEOD-45419,ENA,PRJNA193673,Human,RNA-seq,FALSE, ,FALSE,FALSE,FALSE,FALSE
+E-MTAB-5465,ENA,PRJEB19339,Human,RNA-seq,FALSE, ,TRUE,FALSE,FALSE,FALSE

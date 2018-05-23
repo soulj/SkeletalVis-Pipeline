@@ -1,0 +1,78 @@
+\name{extractAllExpressedGenes}
+
+\alias{extractAllExpressedGenes}
+\title{Read array, report on protein interactions}
+
+\description{
+  Uses the bioconductor affy library to read array files and report on protein interactions.
+  Affy package is for the exploratory oligonucleotide array analysis.
+  This function uses MAS 5.0 absolute detection algorithm to perform the Wilcoxon signed rank-based gene expression precence/absence detection in the Affymetrix Microarray Suite version 5.
+  
+  The table of mas5calls result is as follow:
+ 
+  \tabular{rll}{
+  1415670_at \tab P \tab P\cr
+  AFFX-TransRecMur/X57349_M_at \tab P \tab A\cr
+  AFFX-TrpnX-5_at \tab A \tab A
+  }
+  
+  The row name of the above table shows the probe id. 
+  Column 1 and column 2 of the table indicates whether the transcript was present (P), absent (A), or marginal (M).              
+  All probes present under any conditions are detected.
+  The output of above eample should be a list of probe ids as follows:
+  \tabular{r}{
+                      1415670_at\cr	
+    AFFX-TransRecMur/X57349_M_at	
+  }
+}
+
+\usage{
+extractAllExpressedGenes(
+  inputfile1=GalaxyInputFile(required=TRUE),
+  inputfile2=GalaxyInputFile(required=FALSE),
+  inputfile3=GalaxyInputFile(required=FALSE),
+  inputfile4=GalaxyInputFile(required=FALSE),
+  inputfile5=GalaxyInputFile(required=FALSE),
+  inputfile6=GalaxyInputFile(required=FALSE),
+  outputfile1=GalaxyOutput("output", "tabular")
+)
+}
+
+\arguments{
+  \item{inputfile1}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile2}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile3}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile4}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile5}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile6}{
+    Affymetrix CEL Data File Format
+  }
+  \item{outputfile1}{
+    Protein expressions.
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+extractAllExpressedGenes('sample.tsv', t)
+readLines(t, warn=FALSE)
+}

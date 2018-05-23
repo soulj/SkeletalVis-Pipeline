@@ -1,0 +1,2 @@
+"factor"	"numerator"	"denominator"
+"FactorValue..CELL.TYPE."	"osteoblast"	"skeletal myotubules"

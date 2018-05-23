@@ -1,0 +1,93 @@
+\name{differentialGeneExpressionAnalysis}
+
+\alias{differentialGeneExpressionAnalysis}
+\title{Calculate differential gene expression between 2 sets of data}
+
+\description{
+ This function is to analyze differential gene expression of microarray data for  two sets of data on the Affymetrix oligonucleotide platform. 
+ The Affymetrix microarray data at first is normalized by the rma (robust multi-array average expression measure) algorithm of affy package. 
+ Then the linear model to analyze designed microarray experiments approach of the package limma is used to detect differential expressed genes.
+ A linear model is fitted to the expression data of each gene by the design matrix, which do for ordinary modeling with univariate data.
+ Next, the comtrast matrix is created for the pair-wise comparison results. 
+ The empirical Bayes method is used to moderate the standard errors of the estimated log-fold changes.
+ A top table lists the top gene differetinal expressed between different groups.
+ For example, the differential expression gene analysis of ML II disease compared two groups of samples: ML II wild type samples and ML II mutant samples.
+ Its top table is as follow
+
+:: 
+           V1	              V2	              V3	               V4	                 V5	                    V6	                  V7
+  1457666_s_at	-7.02139374728657	6.58070004035722	-63.3535154086283	9.36195572844208e-10	2.26583618442668e-05	12.5909129914816
+  1453084_s_at	-6.44840680955418	7.85291297507557	-59.9592657471613	1.30478859328421e-09	2.26583618442668e-05	12.3924174957527
+    1448690_at	-5.18688284519683	8.71616517265489	-51.7315400072555	3.17588359738665e-09	2.26583618442668e-05	11.8085964105249
+    1440962_at	-4.78008804033848	9.18120867658225	-46.6543450157693	5.91721193757442e-09	2.26583618442668e-05	11.3564704075447
+  1456073_s_at	-7.94914679211289	8.65262733810269	-46.6267762205736	5.93831379672011e-09	2.26583618442668e-05	11.3537840808768
+
+
+ Column 1 of the top table is the probe annotation, which shows probe id.
+ Column 2 of the top table is the log fold change, which is the estimate of the log-2-fold-change corresponding to the effect or contrast.
+ Column 3 of the top table is the average log2-expression for the probe over all arrays and channels.
+ Column 4 of the top table is the moderated t-statistic.
+ Column 5 of the top table is the raw p-value.
+ Column 6 of the top table is the adjusted p-value or q-value.
+ Column 7 of the top table is the log oddes that gene is differentially expressed.
+ 
+  
+}
+
+\usage{
+differentialGeneExpressionAnalysis(
+  wtfile1=GalaxyInputFile(required=TRUE),
+  wtfile2=GalaxyInputFile(required=FALSE),
+  wtfile3=GalaxyInputFile(required=FALSE),
+  wtfile4=GalaxyInputFile(required=FALSE),
+  mufile1=GalaxyInputFile(required=TRUE),
+  mufile2=GalaxyInputFile(required=FALSE),
+  mufile3=GalaxyInputFile(required=FALSE),
+  mufile4=GalaxyInputFile(required=FALSE),
+  diffExpressedGenes=GalaxyOutput("differentiallyExpressedGenes", "tabular")
+)
+}
+
+\arguments{
+  \item{wtfile1}{
+     Wild Type Input file 1
+  }
+  \item{wtfile2}{
+     Wild Type Input file 2
+  }
+  \item{wtfile3}{
+     Wild Type Input file 3
+  }
+  \item{wtfile4}{
+     Wild Type Input file 4
+  }
+  \item{mufile1}{
+     Mutation Input file 1
+  }
+  \item{mufile2}{
+     Mutation Input file 2
+  }
+  \item{mufile3}{
+     Mutation Input file 3
+  }
+  \item{mufile4}{
+     Mutation Input file 4
+  }
+  \item{diffExpressedGenes}{
+    Table of all genes with columns log2 fold changes, average log2 expression, moderated t-stats, raw p-values, adjusted p-value, log odds that the gene is differentially expressed
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+transcriptOfMicroarrayAnalysisByLimma('sample-WT-I.CEL', 'sample-WT-II.CEL', 'sample-H-I.CEL', 'sample-H-II.CEL')
+}

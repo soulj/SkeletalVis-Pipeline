@@ -1,0 +1,49 @@
+\name{summaryStatistics}
+
+\alias{summaryStatistics}
+\title{Create mean or sd summary of grouped data}
+
+\description{
+  Reads tabular data of grouped bone measurements and outputs specified summary statistic, either mean or standard deviation.
+  Tabular data has form age in column 1, type (WT or diseased) in column 2, measurement type in column 3 (e.g. femurLength) and value of measurement in column 4. 
+    
+}
+
+\usage{
+summaryStatistics(
+  inputTable = GalaxyInputFile(required=TRUE),
+  summaryStatistic = GalaxySelectParam(c('Mean'='mn', 'Standard Deviation'='sd'), force_select=TRUE, required = TRUE),
+  outputfile = GalaxyOutput("summaryStatistics", "tabular")
+)
+}
+
+\arguments{
+  \item{inputTable}{
+    Tabular data
+  }
+\item{summaryStatistic}{
+    Selection from mean or standard deviation
+  }
+  \item{outputPlot}{
+    Tabular summary data
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+summaryStatistics(
+  inputTable = 'resources/femurLengthTabularSample.tabular',
+  summaryStatistic = 'sd',
+  outputfile = t
+)
+
+}

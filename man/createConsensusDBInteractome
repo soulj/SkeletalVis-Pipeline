@@ -1,0 +1,63 @@
+\name{createConsensusDBInteractome}
+
+\alias{createConsensusDBInteractome}
+\title{Create interactome from consensus DB database}
+
+\description{
+   
+  This function is to retrieve protein-protein interactions from ConsensusDB.
+  The input data is a protein-protein interaction file downloaded from ConsensusPathDB. http://string-db.org/newstring_cgi/show_download_page.pl
+  Interactions in the input data may be of 3 different types as shown below:
+ 
+:: 
+ 
+  BIND	14988405	5HT2C_MOUSE,DLG3_MOUSE	0.0149385
+  BIND	15603741	ALEX_MOUSE.GNAS1_MOUSE.GNAS2_MOUSE.GNAS3_MOUSE,ZDHC3_MOUSE	NA
+  BIND	12614612	ORC5_MOUSE	0.0089412599999999995
+  
+  When the participant node (ALEX_MOUSE.GNAS1_MOUSE.GNAS2_MOUSE.GNAS3_MOUSE) is a complex formed by several proteins, 
+  then the confidence score is "NA" and the interaction is deleted.
+  Interactions with only one node to represent selfregulation are extended to an interaction between two identical nodes.
+  The names of participant nodes should be formated in the same way as the gene names from STRING by removing the end component, for example "_MOUSE".
+  The expected output of the above three recordes should be:
+
+::
+
+  5HT2C  DLG3
+  ORC5   ORC5
+  
+ The output is in the same format as the createSTRINGInteractome function,
+  which is 2 columns of gene names.
+}
+
+\usage{
+createConsensusDBInteractome(
+  consensusDBData = GalaxyInputFile(required=TRUE),
+  interactome     = GalaxyOutput("interactome", "tabular")
+)
+}
+
+\arguments{
+  \item{consensusDBData}{
+     Consensus DB protein interaction data
+  }
+  \item{interactome}{
+     Output interactome
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+createConsensusDBInteractome(
+  consensusDBData = 'resources/ConsensusDBMus.txt',
+  interactome     = t)
+}

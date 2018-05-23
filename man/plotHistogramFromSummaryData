@@ -1,0 +1,48 @@
+\name{plotHistogramFromSummaryData}
+
+\alias{plotHistogramFromSummaryData}
+\title{Read tabular summary data and plot histogram}
+
+\description{
+  Plots a histogram from tabular summary data of mean and standard deviation.
+    
+}
+
+\usage{
+plotHistogramFromSummaryData(
+  meanSummaryData=GalaxyInputFile(required=TRUE),
+  sdSummaryData = GalaxyInputFile(required=TRUE),
+  outputPlot = GalaxyOutput("histogram", "png")
+)
+}
+
+\arguments{
+  \item{meanSummaryData}{
+    Tabular data of mean by age and mouse type (diseased or WT)
+  }
+  \item{sdSummaryData}{
+    Tabular data of standard deviation by age and mouse type (diseased or WT)
+  }
+  \item{outputPlot}{
+    A histogram
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+plotHistogramFromSummaryData(
+  meanSummaryData = 'resources/femurLengthMeanSummary.tabular',
+  sdSummaryData = 'resources/femurLengthSDSummary.tabular',
+  outputPlot = t
+)
+
+}

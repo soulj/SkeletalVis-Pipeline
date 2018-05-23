@@ -1,0 +1,16 @@
+Package: ArrayXHuman.db
+Title: Agilent ArrayXHuman annotation data (chip ArrayXHuman)
+Description: Agilent ArrayXHuman annotation data (chip ArrayXHuman) assembled using data from public repositories
+Version: 1.0.0
+Author: Marc Carlson
+Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
+Depends: R (>= 2.7.0), methods, AnnotationDbi (>= 1.36.0), org.Hs.eg.db (>= 3.4.0)
+Suggests: DBI, annotate, RUnit
+Imports: methods, AnnotationDbi
+License: Artistic-2.0
+organism: Homo sapiens
+species: Human
+manufacturer: Agilent
+chipName: ArrayXHuman
+manufacturerUrl: Manufacturer Url not specified
+biocViews: ChipDb, AnnotationData, AgilentChip, Homo_sapiens, ArrayXHuman

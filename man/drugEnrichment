@@ -1,0 +1,56 @@
+\name{drugEnrichment}
+
+\alias{drugEnrichment}
+\title{Perform drug Enrichment analysis}
+
+\description{
+Wrapper for the L1000CDS2 drug signature search engine. Finds signficant similarity or disimilarity of differentially expressed genes with drug transcriptomic responses. Also cross-references the results with pubchem bioassays to give the targets of the enriched drugs.
+}
+
+\usage{
+drugEnrichment <- function(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  homology = GalaxyInputFile(required=FALSE),
+  foldChangeOnly         = GalaxyLogicalParam(),
+  species=GalaxySelectParam(c("Human","Mouse")),
+  enrichedDrugsMimic    = GalaxyOutput("enrichedDrugsMimic", "tabular"),
+  enrichedDrugsReverse    = GalaxyOutput("enrichedDrugsReverse", "tabular")) 
+}
+
+\arguments{
+    \item{differentialExpression}{
+      A tabular table with GeneName, the Log2FoldChange and adjusted p-values (optional). A threshold of absolute 1.5 fold change and adjusted p-value of <=0.05 is used to define differentially expressed genes.
+    }
+    \item{homology}{
+      MGI homology table for mapping orthologs between Human and Mouse
+    }
+    \item{species}{
+      Accepted values are "Human" or "Mouse". Defines the annotations to use.
+    }
+    \item{foldChangeOnly}{
+      Logical value - whether to use the adjusted p-values in defining differentially expressed genes.
+    }
+    \item{enrichedDrugsMimic}{
+      A tabular table detailing the significant similar drugs
+    }
+    \item{enrichedDrugsReverse}{
+     A tabular table detailing the significant opposite drugs
+    }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+
+drugEnrichment(differentialExpression = sourcefile1,species = "Mouse",homology = sourcefile2,foldChangeOnly = T,enrichedDrugsMimic = drugs.mimic,enrichedDrugsReverse = drugs.reverse)
+
+
+
+}

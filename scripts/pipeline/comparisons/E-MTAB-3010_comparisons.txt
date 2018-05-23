@@ -1,0 +1,5 @@
+Factor	Numerator	Denominator
+Factor.Value.growth.condition.	DMEM-F12 + MIMIC miR450a-5p	DMEM-F12
+Factor.Value.growth.condition.	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 7 days + MIMIC miR28-5p	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 7 days
+Factor.Value.growth.condition.	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 7 days	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 2 days
+Factor.Value.growth.condition.	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 21 days	DMEM + beta-glycerol phosphate, ascorbic acid and dexamethasone for 7 days

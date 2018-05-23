@@ -1,0 +1,46 @@
+\name{cutFoldChangeTable}
+
+\alias{cutFoldChangeTable}
+\title{Return fold change table of one comparison from table of several comparisons}
+
+
+\description{
+Reads a table of fold changes (with or without p values) with one or more comparisons, returns a table of fold changes (with or without p values) for a specified comparison.
+}
+
+\usage{
+cutFoldChangeTable(foldChangeTable = sourceFile1,
+                   comparisonNumber = 1,
+                   cutTable = t1)
+}
+
+\arguments{
+ \item{foldChangeTable}{
+    Table of fold changes with or without p values.
+  }
+  \item{comparisonNumber}{
+    The index of the comparison you want to return. 
+  }
+  \item{cutTable}{
+    The table of fold changes corresponding to specified comparison. With or without p values.
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+sourceFile1<-"resources/TestFoldChangeTable.tabular"
+
+t1<-tempfile()
+
+cutFoldChangeTable(foldChangeTable = sourceFile1,
+                   comparisonNumber = 1,
+                   cutTable = t1)
+}

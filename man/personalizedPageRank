@@ -1,0 +1,87 @@
+\name{personalizedPageRank}
+
+\alias{personalizedPageRank}
+\title{Create a personalized Page Rank}
+
+\description{
+  This function will calcualte the personalized PageRank score of each node connected by edges in an input network. 
+  The input includes an input gene list and a two column interactome
+  The topic genes could be a list of differentially expressed genes detected by the microarray data analysis.
+  The format of input gene list contained one gene symbol per row as below:
+  
+::
+
+  VWF
+  CD36
+  ADGRL4
+  ABCA8A
+  KCNE4
+  TEK
+  MYL2
+  KERA
+  TNNT1
+  MGST1
+
+  The format of interactome contained two columns of gene symbol as below:
+
+:: 
+  TIMP1	VWF
+  THBS4	CD36
+  LRRC26	KCNE4
+  ANGPT4	TEK
+  MYLPF	MYL2
+  FMOD	KERA
+  NEB	TNNT1
+  MGST1	NR1I2
+  
+  The function will produce an output table: the gene list with their personalized PageRank score. They are sorted by the score in a decreasing order.
+  The output should be two columns: gene symbol and personalized PageRank Score.
+  The ranked gene list output of above example is:
+  
+::
+
+  KERA	0.00598298633113406
+  KCNE4	0.00596324343573809
+  VWF	0.00589074539514362
+  MYL2	0.00582144130343065
+  TNNT1	0.00551890444225336
+  TEK	0.00539387054879523
+  CD36	0.00514254706790355
+  MGST1	0.00445537632846812
+}
+
+\usage{
+personalizedPageRank(
+  topicGenes   = GalaxyInputFile(required=TRUE),
+  networkEdges = GalaxyInputFile(required=TRUE),
+  rankedGenes  = GalaxyOutput("rankedGenes", "tabular") 
+}
+
+\arguments{
+  \item{topicGenes}{
+    Topic genes
+  }
+  \item{networkEdges}{
+     List of network edges
+  }
+  \item{rankedGenes}{
+     Output list of ranked genes with their rank
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t1 <- tempfile()
+personalizedPageRank(
+  topicGenes   = sourcefile1,
+  networkEdges = sourcefile2,
+  rankedGenes  = t1)
+}

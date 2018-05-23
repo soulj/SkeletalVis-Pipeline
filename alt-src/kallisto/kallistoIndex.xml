@@ -1,0 +1,30 @@
+<tool id="kallistoIndex" name="kallistoIndex" version="0.01">
+    <description>wrapper of kallisto, transcript quantification tool</description>
+    <command>
+    kallisto index -i $indexFile $transcriptome 2&gt;&amp;1
+    </command>
+    <inputs>
+        <param optional="false" name="transcriptome" format="fasta" type="data" label="Select a transcriptome">
+        	<validator type="empty_field" message="This field is required."/>
+        </param>
+	</inputs>
+    <outputs>
+        <data name="indexFile" format="data" label="indexFile"/>
+    </outputs>
+    <tests>
+      <test>
+        <param name="transcriptome" value="transcripts.fasta.gz" />
+        <output name="indexFile" file="transcripts"/>
+      </test>
+    </tests>
+    <help>
+<![CDATA[
+
+Creates a kallisto index file from a fastq transcriptome file.
+
+Input: a transcriptome fasta file
+Output: a kallisto index
+
+]]>
+    </help>
+</tool>

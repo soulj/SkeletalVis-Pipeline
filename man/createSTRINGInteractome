@@ -1,0 +1,85 @@
+\name{createSTRINGInteractome}
+
+\alias{createSTRINGInteractome}
+\title{Create interactome from STRING database}
+
+\description{
+   
+     This function is used to retrieve protein-protein interactions from STRING and create an interactome. 
+     The input data is a protein-protein interaction file downloaded from STRING, in the following format:
+
+::
+
+     10090.ENSMUSP00000000001	10090.ENSMUSP00000000153	binding		0	540
+     10090.ENSMUSP00000000001	10090.ENSMUSP00000000369	activation	activation	1	229
+     10090.ENSMUSP00000000001	10090.ENSMUSP00000000574	activation	activation	0	800
+     10090.ENSMUSP00000000001	10090.ENSMUSP00000000631	reaction	1	900  
+     
+     The first and second columns are two proteins, identified by their STRING id.
+     The third column shows the mode of interaction. The fourth column shows the nature of interaction.
+     The fifth column shows the direction of interaction, where 0 means the interaction is from node B to node A, and 1 means the interaction is from node A to node B.
+     The sixth column shows the confidence score on a scale from 0 to 1000, where 1000 is the highest confidence. Confidence scores are divided by 1000 to get a score between 0 and 1.
+     
+     The input aliases data is a dictionary created manually by sending lists of STRING ids into STRING and retrieving the "networks protein description" files from their website.
+     All mouse proteins listed in the "10090.protein.aliases.v10.txt" file were converted in that way, and the results were concatenated into a single file named "STRINGv10.txt". The format of dictionary should be:
+
+::
+
+     GNAI3	10090.ENSMUSP00000000001	
+     A3R	10090.ENSMUSP00000000574	
+     GRM6	10090.ENSMUSP00000000631	
+     
+     The usual threshold used for high confidence scores is 0.7. Interactions whose confidence score are below the confidence threashold are deleted.
+
+     The output of the above example should be:
+
+::
+
+        A3R  GNAI3
+        GNAI3  GRM6
+        
+     The output is in the same format as the output of the createConsensusDBInteractome function.
+       
+}
+
+\usage{
+createSTRINGInteractome(
+  stringData           = GalaxyInputFile(required=TRUE),
+  stringProteinAliases = GalaxyInputFile(required=TRUE),
+  confidenceThreashold = GalaxyNumericParam(0.7, required=TRUE, min=0, max=1)
+  interactome          = GalaxyOutput("interactome", "tabular")
+)
+}
+
+\arguments{
+  \item{stringData}{
+     STRING protein interaction data
+  }
+  \item{stringProteinAliases}{
+     STRING protein aliases file
+  }
+  \item{confidenceThreashold}{
+     Confidence threashold used to filter the interactome
+  }
+  \item{interactome}{
+     Output interactome
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+   t <- tempfile()
+createSTRINGInteractome( 
+  stringData           = 'resources/10090.protein.actions.test.txt',
+  stringProteinAliases = 'resources/STRINGv10MusFullGeneNameList0.txt',
+  confidenceThreashold = 0.7,
+  interactome          = t)
+}

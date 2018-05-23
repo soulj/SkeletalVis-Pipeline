@@ -1,0 +1,2 @@
+Factor	Numerator	Denominator
+genotype.variation	overexpressing HES1	overexpressing GFP

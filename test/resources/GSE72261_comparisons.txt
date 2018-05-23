@@ -1,0 +1,4 @@
+Factor	Numerator	Denominator
+characteristics_ch1.1	genotype/variation: Xbp1Cart{delta}Ex2 HZ	genotype/variation: Wt HZ
+characteristics_ch1.1	genotype/variation: ColXN617K HZ	genotype/variation: Wt HZ
+characteristics_ch1.1	genotype/variation: C/X HZ	genotype/variation: Wt HZ

@@ -1,0 +1,44 @@
+\name{GTFtoGeneLength}
+\alias{GTFtoGeneLength}
+\title{Creates a table of gene names and effective exon lengths from a GTF file}
+
+
+\description{
+Creates a table of gene names and effective exon lengths from a GTF file.
+}
+
+\usage{
+GTFtoGeneLength <- function (gtffile = GalaxyInputFile(required = T, formatFilter = "gft"), species = GalaxySelectParam(c("Human","Mouse")),
+                             geneExonLengths = GalaxyOutput("geneExonLengths", "tabular")) 
+}
+
+\arguments{
+  \item{gtffile}{
+    A GTF file
+  }
+  \item{geneExonLengths}{
+    A tabular table of genenames and effective exon length.
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use.
+  }
+  \item{geneExonLengths}{
+    A tabular table with the columns "gene_name" and "lengths"
+  }
+
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+geneExonLengths <- tempfile()
+GTFtoGeneLength(gtffile = sourcefile1,species = "Human",geneExonLengths = geneExonLengths)
+
+}

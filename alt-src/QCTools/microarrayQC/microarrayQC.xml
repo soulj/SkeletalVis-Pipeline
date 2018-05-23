@@ -1,0 +1,52 @@
+<tool id="microarrayQC" name="microarrayQC" version="1.0">
+  <description>microarrayQC</description>
+  <command interpreter="Rscript --vanilla">microarrayQC.R
+       #if str($inputfile).strip() != "":
+          --inputfile="$inputfile"
+       #end if
+       #if str($comparisonsTable).strip() != "":
+          --comparisonsTable="$comparisonsTable"
+       #end if
+       #if str($platform).strip() != "":
+          --platform="$platform"
+       #end if
+       #if str($accessionNumber).strip() != "":
+          --accessionNumber="$accessionNumber"
+       #end if
+   	   --outputFile="$html_file"
+       --outputDirectory="$html_file.extra_files_path"
+	   #if str($offset).strip() != "":
+          --offset="$offset"
+       #end if
+  2&gt;&amp;1</command>
+  <inputs>
+    <param optional="false" name="inputfile" format="rdata" type="data" help="Path to rdata object containing expression data." label="[required] Inputfile">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+    <param optional="false" name="comparisonsTable" format="tabular" type="data" help="Path to tab delimited table giving one or more&#10;factor, numerator and denominator for the analysis." label="[required] Comparisons Table">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+    <param optional="false" name="platform" type="select" help="Platform of the microarray" label="[required] Platform" force_select="FALSE">
+      <validator type="empty_field" message="This field is required."/>
+      <option value="Affy">Affy</option>
+      <option value="Affy-ST">Affy-ST</option>
+      <option value="1C-Agilent">1C-Agilent</option>
+      <option value="2C-Agilent">2C-Agilent</option>
+      <option value="Illumina">Illumina</option>
+    </param>
+    <param optional="false" name="accessionNumber" type="text" help="accessionNumber - used to name the report" label="accessionNumber">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+    <param optional="true" name="offset" type="integer" value="0" help="" label="Offset">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+  </inputs>
+  <outputs>
+    <data format="html" name="html_file" label="microarrayQC.html"/>
+  </outputs>
+  <help>
+**Description**
+
+Perform microarray quality control using the arrayQualityMetrics library
+</help>
+</tool>

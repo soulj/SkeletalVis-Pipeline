@@ -1,0 +1,4 @@
+Factor	Numerator	Denominator
+Genotype	OCD	WT
+Genotype	SEMD	WT
+Genotype	SEMD	OCD

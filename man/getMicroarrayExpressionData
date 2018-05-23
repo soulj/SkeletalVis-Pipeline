@@ -1,0 +1,58 @@
+\name{getMicroarrayExpressionData}
+
+\alias{getMicroarrayExpressionData}
+\title{Download microarray data from GEO}
+
+\description{
+Download microarray data from ArrayExpress or GEO and store as an R object
+}
+
+\usage{
+getMicroarrayExpressionData<-function(
+accessionNumber=GalaxyCharacterParam(),
+platform=GalaxySelectParam(c("Affy","Affy-ST","1C-Agilent","2C-Agilent","Illumina")),
+numberFileRemove=GalaxyIntegerParam(0L),
+grepExpression=GalaxyLogicalParam(),
+site=GalaxySelectParam(c("GEO","ArrayExpress")), 
+expressionData=GalaxyOutput("expressionData","rdata"))
+ 
+}
+
+\arguments{
+  \item{accessionNumber}{
+    GEO or ArrayExpress character accession number
+  }
+  \item{platform}{
+    Character option of "Affy","Affy-ST","1C-Agilent","2C-Agilent","Illumina"
+  }
+  \item{numberFileRemove}{
+   Numeric parameter - number of non data files to remove
+  }
+  \item{grepExpression}{
+   Logical parameter should the illumina expression data be grepped
+  }
+  \item{site}{
+	Character option of "GEO","ArrayExpress"
+  }
+  \item{expressionData}{
+	Output expression data as rdata
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t<-tempfile()
+getMicroarrayExpressionData(accessionNumber="GSE55457",platform = "Affy",expressionData=t,site="GEO")
+
+objectName<-load(t)
+print(get(objectName))
+
+}

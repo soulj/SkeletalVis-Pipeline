@@ -1,0 +1,14 @@
+tmp
+*.bak
+*.log
+*.png
+*.pdf
+*~
+.directory
+.Rproj.user
+.RData
+.Rdata
+.RHistory
+.Rhistory
+
+/test/GSE*

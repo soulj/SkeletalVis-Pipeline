@@ -1,0 +1,96 @@
+\name{celltypeSpecificNetwork}
+
+\alias{celltypeSpecificNetwork}
+\title{Create a cell type specific network}
+
+\description{
+  This function will generate cell type specific network based on an input gene list and a two column interactome
+  The format of input gene list contained one gene symbol per row as below:
+  
+::
+
+  5HT2C
+  MDM2
+  DHC24
+  ORC5
+  CDT1
+  GEMI
+  RNF6
+
+  The format of interactome contained two columns of gene symbol as below:
+
+:: 
+  5HT2C	DLG3
+  MDM2	DHC24
+  ORC5	ORC5
+  CDT1	GEMI
+  ORC3	ORC3
+  HVM53	KV2A7
+  SHIP1	Q9D031
+  RNF6	LIMK1
+  
+  The function will produce two output: the edge list of network and a list isolated nodes in the network.
+  The edge list is a two column interactome in which all nodes are found in the input gene list and connected by edges.
+  The output should be two columns of gene symbol.
+  The networkEdges output of above example is:
+  
+::
+
+  MDM2	DHC24
+  ORC5	ORC5
+  CDT1	GEMI
+  
+  The isolated nodes contained nodes found in the input gene list but they only interact with nodes absent in the input gene list.
+  The output should be one column of gene symbol.
+  The networkIsolatedNodes output of above example is:
+  
+ ::
+ 
+  5HT2C
+  RNF6
+  
+  
+}
+
+\usage{
+celltypeSpecificNetwork(
+  expressedGenes       = GalaxyInputFile(required=TRUE),
+  interactome          = GalaxyInputFile(required=TRUE),
+  networkEdges         = GalaxyOutput("networkEdges", "tabular"),
+  networkIsolatedNodes = GalaxyOutput("networkIsolatedNodes", "tabular"))
+}
+
+\arguments{
+  \item{expressedGenes}{
+     List of expressed genes
+  }
+  \item{interactome}{
+     Interactome
+  }
+  \item{networkEdges}{
+     Edges of network
+  }
+  \item{networkIsolatedNodes}{
+     Isolated nodes in network
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t1 <- tempfile()
+t2 <- tempfile()
+celltypeSpecificNetwork(
+  expressedGenes       = sourcefile1,
+  interactome          = sourcefile2,
+  networkEdges         = t1,
+  networkIsolatedNodes = t2)
+
+}

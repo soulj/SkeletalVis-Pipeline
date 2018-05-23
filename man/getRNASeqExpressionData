@@ -1,0 +1,63 @@
+\name{getRNASeqExpressionData}
+
+\alias{getRNASeqExpressionData}
+
+\title{getRNASeqExpressionData}
+
+\description{
+Downloads fastq files from ENA
+
+Input
+An ENA project accession number
+
+A sampleTable txt file detailing the sample names, file prefixes and the experimental factor in the format
+
+  \tabular{ccc}{
+  Sample \tab File \tab Genotype\cr
+  Control_1 \tab SRR096441 \tab Control \cr
+
+  }
+
+A filename for a table of downloaded files
+  
+
+Output: 
+The downloaded fastq files using the filenames specified. Galaxy discovers the downloaded files and imports them into the history. A table of downloaded files is provided.
+}
+
+\usage{
+getRNASeqExpressionData(accessionNumber = "PRJNA136103", sampleTable = sourceFile1, downloadedFiles = t)
+}
+
+\arguments{
+  \item{accessionNumber}{
+   ENA accession number
+  }
+  \item{sampleTable}{
+    A sampleTable txt file detailing the sample names, file names and the experimental factor(s)
+  }
+  \item{downloaded files}{
+   Filename for the output table
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+
+t<-tempfile()
+sourceFile1<-'sampleTable.txt'
+
+getRNASeqExpressionData(accessionNumber = "PRJNA136103", sampleTable = sourceFile1, downloadedFiles = t)
+file.exists("fastqFiles/SRR096441.fastq.gz")
+}
+
+
+}

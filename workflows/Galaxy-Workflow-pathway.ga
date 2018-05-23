@@ -1,0 +1,454 @@
+{
+    "a_galaxy_workflow": "true", 
+    "annotation": "", 
+    "format-version": "0.1", 
+    "name": "RatPathway", 
+    "steps": {
+        "0": {
+            "annotation": "", 
+            "id": 0, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 184.55557250976562, 
+                "top": 247.95833587646484
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "c9397c68-8d4b-402e-a2ae-d8116587de4d"
+        }, 
+        "1": {
+            "annotation": "", 
+            "id": 1, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 199.78125, 
+                "top": 417.9583435058594
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "d855e982-62fb-499b-95a4-d82dcc39c40f"
+        }, 
+        "2": {
+            "annotation": "", 
+            "id": 2, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 264.2430725097656, 
+                "top": 593.3923950195312
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "b61985e7-6a0f-4ad8-9ce7-23d1b67f512b"
+        }, 
+        "3": {
+            "annotation": "", 
+            "id": 3, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 219.17361450195312, 
+                "top": 744.3472290039062
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "5a1b721a-98b0-4c4c-ad7c-3194b1b326f0"
+        }, 
+        "4": {
+            "annotation": "", 
+            "id": 4, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 228.51388549804688, 
+                "top": 882.6632080078125
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "a567d7bc-0138-416d-8100-8231f7832749"
+        }, 
+        "5": {
+            "annotation": "", 
+            "id": 5, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "T F_ Enrichment", 
+            "outputs": [
+                {
+                    "name": "enrichmentTable", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 766.9861450195312, 
+                "top": 582.1597290039062
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "TF_Enrichment", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"padj\": \"\\\"0.05\\\"\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "4854fc5f-e170-41ee-9230-73a5d34d4b17"
+        }, 
+        "6": {
+            "annotation": "", 
+            "id": 6, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "geneExonLengths": {
+                    "id": 1, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Pathway Slim Enrichment", 
+            "outputs": [
+                {
+                    "name": "slimEnrichmentPathways", 
+                    "type": "tabular"
+                }, 
+                {
+                    "name": "slimEnrichmentPlot", 
+                    "type": "png"
+                }
+            ], 
+            "position": {
+                "left": 889.5035400390625, 
+                "top": 194.17361450195312
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionslimEnrichmentPlot": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "slimEnrichmentPlot"
+                }
+            }, 
+            "tool_errors": null, 
+            "tool_id": "pathwaySlimEnrichment", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"padj\": \"\\\"0.05\\\"\", \"geneExonLengths\": \"null\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "37d0c4fd-a045-41c5-92dc-5fd78bc83366"
+        }, 
+        "7": {
+            "annotation": "", 
+            "id": 7, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "geneExonLengths": {
+                    "id": 1, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Reactome Enrichment", 
+            "outputs": [
+                {
+                    "name": "pathways", 
+                    "type": "tabular"
+                }, 
+                {
+                    "name": "enrichmentPlot", 
+                    "type": "png"
+                }
+            ], 
+            "position": {
+                "left": 1042.4722900390625, 
+                "top": 754.138916015625
+            }, 
+            "post_job_actions": {
+                "HideDatasetActionenrichmentPlot": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "enrichmentPlot"
+                }
+            }, 
+            "tool_errors": null, 
+            "tool_id": "reactomeEnrichment", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"padj\": \"\\\"0.05\\\"\", \"geneExonLengths\": \"null\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "9feb6567-779b-4d05-8b00-ef539fc73a37"
+        }, 
+        "8": {
+            "annotation": "", 
+            "id": 8, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "geneLengths": {
+                    "id": 1, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "G O Enrichment", 
+            "outputs": [
+                {
+                    "name": "enrichedTerms", 
+                    "type": "tabular"
+                }, 
+                {
+                    "name": "enrichedTermsReduced", 
+                    "type": "tabular"
+                }, 
+                {
+                    "name": "mdsPlot", 
+                    "type": "html"
+                }
+            ], 
+            "position": {
+                "left": 1105.9617919921875, 
+                "top": 979.12158203125
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "GOEnrichment", 
+            "tool_state": "{\"__page__\": 0, \"geneLengths\": \"null\", \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"padj\": \"\\\"0.05\\\"\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "c157ef58-b0d6-441b-a360-bfc3be55c8b6"
+        }, 
+        "9": {
+            "annotation": "", 
+            "id": 9, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "interactome": {
+                    "id": 2, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Differential Expression Page Rank", 
+            "outputs": [
+                {
+                    "name": "rankedGenes", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 1174.8507080078125, 
+                "top": 260.0590362548828
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "differentialExpressionPageRank", 
+            "tool_state": "{\"__page__\": 0, \"backgroundSubtract\": \"\\\"True\\\"\", \"interactome\": \"null\", \"alpha\": \"\\\"0.7\\\"\", \"__rerun_remap_job_id__\": null, \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "e4c25894-ade0-43da-8768-cc6a224e05e0"
+        }, 
+        "10": {
+            "annotation": "", 
+            "id": 10, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "interactome": {
+                    "id": 2, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Giga Subnetworks", 
+            "outputs": [
+                {
+                    "name": "moduleNodes", 
+                    "type": "text"
+                }, 
+                {
+                    "name": "modulePlots", 
+                    "type": "pdf"
+                }, 
+                {
+                    "name": "visNetworks", 
+                    "type": "rdata"
+                }, 
+                {
+                    "name": "summaryTable", 
+                    "type": "text"
+                }
+            ], 
+            "position": {
+                "left": 1393.3056640625, 
+                "top": 615.4583435058594
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "GigaSubnetworks", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"interactome\": \"null\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "d713df4a-4873-4c77-bfc2-fb7bb5940fe4"
+        }, 
+        "11": {
+            "annotation": "", 
+            "id": 11, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "homology": {
+                    "id": 3, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Drug Enrichment", 
+            "outputs": [
+                {
+                    "name": "enrichedDrugsMimic", 
+                    "type": "tabular"
+                }, 
+                {
+                    "name": "enrichedDrugsReverse", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 591.9375, 
+                "top": 925.1319580078125
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "drugEnrichment", 
+            "tool_state": "{\"homology\": \"null\", \"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"padj\": \"\\\"0.05\\\"\", \"species\": \"null\", \"differentialExpression\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "20a5d48e-83ad-4b44-8d1a-8c056c49c703"
+        }, 
+        "12": {
+            "annotation": "", 
+            "id": 12, 
+            "input_connections": {
+                "differentialExpression": {
+                    "id": 0, 
+                    "output_name": "output"
+                }, 
+                "secretedReference": {
+                    "id": 4, 
+                    "output_name": "output"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Annotate Secreted Proteins", 
+            "outputs": [
+                {
+                    "name": "secretedProteins", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 1157.87158203125, 
+                "top": 440.5278015136719
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "annotateSecretedProteins", 
+            "tool_state": "{\"__page__\": 0, \"__rerun_remap_job_id__\": null, \"differentialExpression\": \"null\", \"secretedReference\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "cf3fce1b-fc20-445d-b744-9c80b773bad1"
+        }
+    }, 
+    "uuid": "6af3e6b8-2677-4e99-90f9-6dac9db51b60"
+}

@@ -1,0 +1,5 @@
+Factor1	Factor2	Numerator	Denominator
+FactorValue..GENOTYPE.	FactorValue..TISSUE.	Cre-;Tgfbr2lox/wt.Intervertebral disc (IVD)	Cre+;Tgfbr2lox/lox.Intervertebral disc (IVD)
+FactorValue..GENOTYPE.	FactorValue..TISSUE.	Cre-;Tgfbr2lox/wt.Vertebrae	Cre+;Tgrbr2lox.lox.Vertebrae
+FactorValue..GENOTYPE.	FactorValue..TISSUE.	Cre-;Tgfbr2lox/wt.Intervertebral disc (IVD)	Cre-;Tgfbr2lox/wt.Vertebrae
+FactorValue..GENOTYPE.	FactorValue..TISSUE.	Cre+;Tgfbr2lox/lox.Intervertebral disc (IVD)	Cre+;Tgrbr2lox.lox.Vertebrae

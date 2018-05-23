@@ -1,0 +1,9 @@
+{
+	"n_targets": 15,
+	"n_bootstraps": 0,
+	"n_processed": 10000,
+	"kallisto_version": "0.43.1",
+	"index_version": 10,
+	"start_time": "Wed Sep  6 16:17:07 2017",
+	"call": "kallisto quant -i transcripts.idx --plaintext -o ./ reads_1.fastq.gz reads_2.fastq.gz"
+}

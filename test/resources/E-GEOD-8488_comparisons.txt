@@ -1,0 +1,5 @@
+Factor	Numerator	Denominator
+Hybridization.Name	LY	DMSO
+Hybridization.Name	UO126	DMSO
+Hybridization.Name	SB90	DMSO
+Hybridization.Name	TSA	DMSO

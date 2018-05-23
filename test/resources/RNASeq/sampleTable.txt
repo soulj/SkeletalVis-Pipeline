@@ -1,0 +1,13 @@
+SampleName	Seq	Genotype
+9_SEMD3-40752790.fastq	inhouse	SEMD
+8_SEMD2-40755796.fastq	inhouse	SEMD
+7_SEMD1-40751784.fastq	inhouse	SEMD
+6_OCD3-40745785.fastq	inhouse	OCD
+5_OCD2-40749780.fastq	inhouse	OCD
+4_OCD1-40755787.fastq	inhouse	OCD
+3_WT3-40753782.fastq	inhouse	WT
+2_WT2-40759797.fastq	inhouse	WT
+1_WT1-40753778.fastq	inhouse	WT
+OCD	gatc	OCD
+SEMD	gatc	SEMD
+WT	gatc	WT

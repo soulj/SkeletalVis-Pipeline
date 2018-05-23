@@ -1,0 +1,43 @@
+\name{plotHistogram}
+
+\alias{plotHistogram}
+\title{Read csv and plot histogram}
+
+\description{
+  Plots a histogram
+    
+}
+
+\usage{
+performPCA(
+  inputfile1=GalaxyInputFile(required=TRUE),
+  outputPlot=GalaxyOutput("output", "tabular")
+)
+}
+
+\arguments{
+  \item{inputfile1}{
+    CSV data
+  }
+  \item{outputPlot}{
+    A histogram
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+plotHistogram(
+  inputfile1 = 'resources/femurLengthSampleData.csv',
+  outputPlot = t
+)
+
+}

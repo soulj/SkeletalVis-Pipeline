@@ -1,0 +1,59 @@
+<tool id="getRNASeqExpressionData" name="Get R N A Seq Expression Data" version="1.0">
+  <description>getRNASeqExpressionData</description>
+  <command interpreter="Rscript --vanilla">getRNASeqExpressionData.R
+       #if str($accessionNumber).strip() != "":
+          --accessionNumber="$accessionNumber"
+       #end if
+       #if str($sampleTable).strip() != "":
+          --sampleTable="$sampleTable"
+       #end if
+       #if str($downloadedFiles).strip() != "":
+          --downloadedFiles="$downloadedFiles"
+       #end if
+
+2&gt;&amp;1</command>
+  <inputs>
+    <param optional="true" name="accessionNumber" type="text" help="" size="60" label="Accession Number">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+    <param optional="false" name="sampleTable" format="tabular" type="data" help="A sampleTable txt file detailing the sample names and the&#10;experimental factor" label="[required] Sample Table">
+      <validator type="empty_field" message="This field is required."/>
+    </param>
+  </inputs>
+  <outputs>
+    <data format="tabular" name="downloadedFiles" label="files.tabular"/>
+    <data format="fastq" name="report">
+        <discover_datasets pattern="__designation__" format="fastq.gz" directory="fastqFiles" visible="true" />
+    </data>
+  </outputs>
+  <help>
+**Description**
+
+Performs DESeq2 analysis on RNA-Seq data quantified by Kallisto
+
+Input An R list stored as rdata (from
+KallistoAbundancestoGeneCountMatrix)
+
+A sampleTable txt file detailing the sample names and the
+experimental factor in the format
+
+SampleName  Condition1  Condition2 
+Control_1     Batch1     Control   
+Mutant_1     Batch2      Mutant   
+
+A conditionTable txt file detailing the experimental factor and
+the levels of that factor to be compared in the format:
+
+FactorName  Numerator  Denominator 
+Condition1   Mutant      Control   
+Condition2   Batch1      Batch2    
+
+Species - either "Human" or "Mouse"
+
+Wherever the only fold changes should be calculated as in the case
+where there are no experimental replicates.
+
+Output: A tabular table with ID, GeneName and the Log2FoldChange
+and adjusted p-values (where appropriate) for all the comparisons.
+</help>
+</tool>

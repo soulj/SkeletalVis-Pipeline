@@ -1,0 +1,63 @@
+\name{differentialExpressionFromArrayExpress}
+
+\alias{differentialExpressionFromArrayExpress}
+\title{differentialExpressionFromArrayExpress}
+
+\description{
+Perform differential expression analysis from microarray data downloaded from arrayexpress or geo.
+}
+
+\usage{
+differentialExpressionFromArrayExpress <- function(
+inputfile = GalaxyInputFile(required=TRUE,formatFilter = "rdata"),
+comparisonsTable=GalaxyInputFile(required=TRUE,formatFilter = "tabular"),
+platform=GalaxySelectParam(c("Affy","1C-Agilent","2C-Agilent","Illumina")),
+annotationFile=GalaxySelectParam("lumiMouseIDMapping","lumiHumanIDMapping","mouse4302.db","mgug4122a.db","hgu133plus2.db"),foldChangeOnly=GalaxyLogicalParam(),foldChangeTable=GalaxyOutput("foldChangeTable","tabular")) 
+ 
+}
+
+\arguments{
+  \item{inputfile}{
+    Path to rdata object containing expression data.
+  }
+  \item{comparisonsTable}{
+    Path to tab delimited table giving one or more factor, numerator and denominator for the analysis.
+  }
+  \item{platform}{
+	Option of platform .
+  }
+  \item{annotationFile}{
+	Option of annotation.
+  }
+  \item{foldChangeOnly}{
+	If true, only output fold change comparrisons.
+  }
+  \item{foldChangeTable}{
+	Output table giving gene symbol, log2 fold change and the adjusted p-value for each of the comparisons.
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
++t1<-tempfile()
+
+differentialExpressionFromArrayExpress(inputfile = sourceFile1,
+                                       comparisonsTable = sourceFile2,
+                                       platform = "Affy",
+                                       annotationFile="mouse4302.db",
+                                       foldChangeOnly = F,
+                                       foldChangeTable = t1)
+
+foldChangeTable <-read.delim(t1)
+dim(foldChangeTable)
+head(foldChangeTable)
+
+}

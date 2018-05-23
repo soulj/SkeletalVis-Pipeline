@@ -1,0 +1,16 @@
+Package: AgilentMouse014868.db
+Title: Agilent AgilentMouse014868 annotation data (chip AgilentMouse014868)
+Description: Agilent AgilentMouse014868 annotation data (chip AgilentMouse014868) assembled using data from public repositories
+Version: 1.0.0
+Author: Marc Carlson
+Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
+Depends: R (>= 2.7.0), methods, AnnotationDbi (>= 1.36.0), org.Mm.eg.db (>= 3.4.0)
+Suggests: DBI, annotate, RUnit
+Imports: methods, AnnotationDbi
+License: Artistic-2.0
+organism: Mus musculus
+species: Mouse
+manufacturer: Agilent
+chipName: AgilentMouse014868
+manufacturerUrl: Manufacturer Url not specified
+biocViews: ChipDb, AnnotationData, AgilentChip, Mus_musculus, AgilentMouse014868

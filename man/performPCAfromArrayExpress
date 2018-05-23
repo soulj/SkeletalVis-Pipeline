@@ -1,0 +1,45 @@
+\name{performPCAfromArrayExpress}
+
+\alias{performPCAfromArrayExpress}
+\title{Read expressionset rdata and perform PCA}
+
+
+\description{
+Reads a expression set object stored as rdata and performs principal component analysis
+}
+
+\usage{
+performPCAfromArrayExpress <- function(
+  inputfile = GalaxyInputFile(required=TRUE,formatFilter = "rdata"), expFactors=GalaxyInputFile(required=TRUE,formatFilter = "tabular"), pcaPlot = GalaxyOutput("PCAplot", "jpg"),geneInfluence=GalaxyOutput("geneInfluence", "tabular")) 
+}
+
+\arguments{
+ \item{inputfile}{
+    expressionset/affybatch object stored as rdata.
+  }
+  \item{expFactors}{
+    a tabular table of experimental factors to use to label the PCA with
+  }
+  \item{pcaPlot}{
+    png image of the first two principal components of the data
+  }
+  \item{geneInfluence}{
+    tabular table of the contribution of each probe to each of the principal components
+  }
+
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t1<-tempfile()
+t2<-tempfile()
+performPCAfromArrayExpress(inputfile = sourceFile1,expFactors = sourceFile2,pcaPlot = t1,geneInfluence = t2)
+}

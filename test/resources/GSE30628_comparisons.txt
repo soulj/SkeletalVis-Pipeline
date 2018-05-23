@@ -1,0 +1,3 @@
+Factor	Numerator	Denominator
+genotype/variation	Col10a1 p.Asn617Lys	wild type
+genotype/variation	ColXTgcog	wild type

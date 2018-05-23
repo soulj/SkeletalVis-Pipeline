@@ -1,0 +1,56 @@
+\name{GigaSubnetworks}
+
+\alias{GigaSubnetworks}
+\title{Use GIGA to identify and plot subnetworks}
+
+
+\description{
+Runs the GIGA algorithm to identify subnetworks given an interactome and differential expression data.
+}
+
+\usage{
+GigaSubnetworks <- function(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  interactome            = GalaxyInputFile(required=TRUE),
+  foldChangeOnly         = GalaxyLogicalParam(),
+  moduleNodes            = GalaxyOutput("moduleNodes", "text"),
+  modulePlots            = GalaxyOutput("modulePlots", "pdf")
+) 
+}
+
+\arguments{
+ \item{differentialExpression}{
+    A tabular table with GeneName, the Log2FoldChange and adjusted p-values (optional).
+  }
+  \item{interactome}{
+    A tabular table of pairwise interactions given by two columns.
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use.
+  }
+  \item{foldChangeOnly}{
+    Logical value - whether to use the adjusted p-values in the subnetwork identification
+  }
+   \item{moduleNodes}{
+    A text file of the nodes in the subnetworks
+  }
+  \item{modulePlots}{
+    A pdf contains plots of the subnetworks
+  }
+
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+moduleNodes <- tempfile()
+modulePlots <- tempfile()
+GigaSubnetworks(differentialExpression = sourcefile1,interactome = sourcefile2, foldChangeOnly = F, moduleNodes = moduleNodes, modulePlots = modulePlots)
+}

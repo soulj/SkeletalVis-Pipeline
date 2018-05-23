@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<toolbox tool_path="../rgalaxy-tools">
+  <section name="Kallisto tools" id="kallistoTools">
+    <tool file="kallistoIndex/kallistoIndex.xml"/>
+    <tool file="kallistoQuant/kallistoQuant.xml"/>
+    <tool file="KallistoAbundancestoGeneCountMatrix/KallistoAbundancestoGeneCountMatrix.xml"/>
+  </section>
+</toolbox>

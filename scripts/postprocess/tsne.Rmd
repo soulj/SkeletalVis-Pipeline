@@ -1,0 +1,44 @@
+---
+title: "tsne"
+output: html_notebook
+---
+
+Make a tsne from the zscores
+```{r}
+library("Rtsne")
+library("plotly")
+library("igraph")
+library("RColorBrewer")
+library("dbscan")
+
+C <- readRDS(file="similarityMatrixChrDir.RDS")
+
+#remove the all NA elements
+C <- C[!apply(C,1,function(x) all(is.na(x)|is.nan(x)|x==0)),]
+C <- C[,!apply(C,2,function(x) all(is.na(x)|is.nan(x)|x==0))]
+
+
+diag(C) <- 0
+# C <- abs(C)
+C <- 1-C
+C[is.nan(C)]<-1
+
+set.seed(42)
+
+tsnes<-lapply(1:500,function(x) tsne <- Rtsne(C,is_distance = T,perplexity = 5,verbose = T,max_iter = 5000))
+values <- lapply(tsnes,function(x) min(x$costs))
+
+
+res <- dbscan(tsnes[[which.min(abs(unlist(values)))]]$Y,6,minPts = 2)
+colours <- c(toupper("#eeeeee"),colorRampPalette(brewer.pal(9, "Set1"))(length(unique(res$cluster))))
+
+accessions <- read.delim("accessions.txt",stringsAsFactors = F)
+accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
+
+text<-accessions[match(colnames(C),accessions$combined),"comparisonsText"]
+g <- ggplot(as.data.frame(tsnes[[which.min(abs(unlist(values)))]]$Y),aes(x = V1,y=V2,text=text,color=as.factor(res$cluster))) + geom_point(size=3) + scale_colour_manual(values = colours)+ cowplot::theme_cowplot()
+ggplotly(g, tooltip="text")
+
+ggsave(g,filename = "tsne.svg",width = 8,height=5)
+
+```

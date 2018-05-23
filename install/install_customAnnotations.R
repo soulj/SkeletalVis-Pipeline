@@ -1,0 +1,15 @@
+install.packages('AgilentMouse014868.db', repos=NULL, type="source")
+install.packages('AgilentMouse028005.db', repos=NULL, type="source")
+install.packages('primeview.db', repos=NULL, type="source")
+install.packages('AgilentRat014879.db', repos=NULL, type="source")
+install.packages('AgilentRat028279.db' , repos=NULL, type="source")
+install.packages('pathwaySlim' , repos=NULL, type="source")
+install.packages('AgilentHuman039494.db' , repos=NULL, type="source")
+install.packages('ArrayXHuman.db' , repos=NULL, type="source")
+install.packages('AgilentMouse079303.db' , repos=NULL, type="source")
+
+install.packages('EnsDb.Ecaballus.v79' , repos=NULL, type="source")
+install.packages('EnsDb.Drerio.v79' , repos=NULL, type="source")
+install.packages('EnsDb.Btaurus.v79' , repos=NULL, type="source")
+install.packages('EnsDb.Sscrofa.v79' , repos=NULL, type="source")
+

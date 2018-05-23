@@ -1,0 +1,56 @@
+\name{pathwaySlimEnrichment}
+
+\alias{pathwaySlimEnrichment}
+\title{Read array and perform principal component analysis}
+
+\description{
+Wrapper for the goseq Bioconductor library for identifying differentially regulated slim-pathways while taking into account the length bias present in RNA-Seq data. 
+}
+
+\usage{
+pathwaySlimEnrichment <- function(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  geneExonLengths = GalaxyInputFile(required = T, formatFilter = "tabular"),
+  species=GalaxySelectParam(c("Human","Mouse")),
+  foldChangeOnly = GalaxyLogicalParam(),
+  slimEnrichmentPathways     = GalaxyOutput("slimEnrichmentPathways", "tabular"),
+  slimEnrichmentPlot     = GalaxyOutput("slimEnrichmentPlot", "png"))
+}
+
+\arguments{
+  \item{differentialExpression}{
+    A tabular table with GeneName, the Log2FoldChange and adjusted p-values (optional). A threshold of absolute 1.5 fold change and adjusted p-value of <=0.05 is used to define differentially expressed genes.
+  }
+  \item{geneExonLengths}{
+    A tabular table of genenames and effective exon length.
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use.
+  }
+  \item{foldChangeOnly}{
+    Logical value - whether to use the adjusted p-values in defining differntially expressed genes.
+  }
+  \item{slimEnrichmentPathways}{
+    A tabular table detailing the significant pathways.
+  }
+  \item{slimEnrichmentPlot}{
+    A ggplot showing the enrichment and the adjusted p-values of the significant pathways
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+slimEnrichmentPathways <- tempfile()
+slimEnrichmentPlot <- tempfile()
+
+pathwaySlimEnrichment(differentialExpression = sourcefile1,geneExonLengths = sourcefile2,species = "Mouse",foldChangeOnly = T,slimEnrichmentPathways = slimEnrichmentPathways,slimEnrichmentPlot = slimEnrichmentPlot)
+
+}

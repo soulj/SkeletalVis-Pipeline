@@ -1,0 +1,91 @@
+\name{characteristicDirectionRNASeq}
+
+\alias{PCARNASeq}
+\title{PCA for RNASeq data}
+
+\description{
+  Performs PCA on RNASeq data
+  
+  Input
+  An R list stored as rdata (from KallistoAbundancestoGeneCountMatrix)
+  
+  An sampleTable txt file detailing the sample names and the experimental factor in the format:
+    
+    \tabular{ccc}{
+      SampleName \tab Condition1 \tab Condition2\cr
+      Control_1 \tab Batch1 \tab Control \cr
+      Mutant_1 \tab Batch2  \tab Mutant
+    }
+    
+    A conditionTable txt file detailing the experimental factor and the levels of that factor to be compared in the format:
+
+  \tabular{ccc}{
+  FactorName \tab  Numerator \tab  Denominator\cr
+  Condition1\tab Mutant \tab Control \cr
+  Condition2 \tab Batch1  \tab Batch2
+  }
+  Species - either "Human" or "Mouse"
+  
+  
+  Output: 
+  a txt file of top 500 genes by characteristic direction for each comparison
+  
+}
+
+\usage{
+  characteristicDirectionRNASeq<-function(
+    txiData=GalaxyInputFile(required=T,formatFilter="rdata"),
+    sampleTable=GalaxyInputFile(required=T,formatFilter="tabular"),
+    comparisonsTable=GalaxyInputFile(required=T,formatFilter="tabular"),
+    species=GalaxySelectParam(c("Human","Mouse"),required=T),
+    technicalReplicates=GalaxyLogicalParam(),
+    foldChangeOnly=GalaxyLogicalParam(),
+    geneInfluence=GalaxyOutput("geneInfluence","tabular"))
+}
+
+\arguments{
+  \item{txiData}{
+    A list generated from the KallistoAbundancestoGeneCountMatrix module stored as rdata
+  }
+  \item{sampleTable}{
+    Am sampleTable txt file detailing the sample names and the experimental factor in the format
+  }
+  \item{comparisonsTable}{
+    A comparisonsTable txt file detailing the experimental factor and the levels of that factor
+  }
+  \item{species}{
+    Species either Human or Mouse
+  }
+  \item{technicalReplicates}{
+    Logical - does the dataset contain experimental replicates to be collpased. Uses the first two factors defined in the sampleTable to determine the technical replicates.
+  }
+  \item{foldChange only}{
+    logical - should only the fold changes be calculated?
+  }
+  \item{chrDirTable}{
+    A gene influence tabular text file
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+  \code{\link{galaxy}}, 
+  \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+  t <- tempfile()
+  t2 <- tempfile()
+  
+  characteristicDirectionRNASeq (
+    txiData=sourcefile1,
+    sampleTable=sourcefile2,
+    foldChangeOnly =F,
+    species="Human",
+    pcaPlot=t,
+    chrDirTable=t2)
+  
+}

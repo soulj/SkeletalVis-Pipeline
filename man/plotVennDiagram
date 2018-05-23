@@ -1,0 +1,97 @@
+\name{plotVennDiagram}
+
+\alias{plotVennDiagram}
+\title{Plot Venn Diagram for the comparison of nodes detected in the functional module by five different algorithms}
+
+\description{
+  This function is to compare genes detected by different functional module detection algorithms.
+  It is assumed that at least two valid data sets should be imported for comparison.
+  It will export the intersection module over certain predefined number of algorithms and produced a Venn diagram for the common area distribution.
+  The input of data is a list of gene symbols as follow:
+  
+  ::
+      RBP1
+      IRF7
+      AKT1
+      SMAD6
+      UBC
+      ATM
+   
+   Note: If any one out of the five algorithms could not detect any genes in the module. Users could create an empty text file  instead of the input data. They have to type a "null" on this file, which indicates that the algorithm did not detect any genes.    
+   A Venn digram is ploted as an output of the comparison results.
+   Another output is a table of the intersection module, which contains a list of genes present in the intersection module as follow:
+   
+   ::
+   
+     RBP1
+     IRF7
+     ID4
+     PTGIS
+     COL2A1
+     PTX3
+    
+}
+
+\usage{
+performPCA(
+  inputfile1=GalaxyInputFile(required=TRUE),
+  inputfile2=GalaxyInputFile(required=FALSE),
+  inputfile3=GalaxyInputFile(required=FALSE),
+  inputfile4=GalaxyInputFile(required=FALSE),
+  inputfile5=GalaxyInputFile(required=FALSE),
+  intersectionThreshold = GalaxyNumericParam(1, required=TRUE, min=1),
+  outputPlot=GalaxyOutput("IntersectionModuleNode", "tabular"),
+  outputPlot = GalaxyOutput("plot", "pdf")
+)
+}
+
+\arguments{
+  \item{inputfile1}{
+    A list of genes detected by the functional module detection algorithm 1.
+  }
+  \item{inputfile2}{
+    A list of genes detected by the functional module detection algorithm 2.
+  }
+  \item{inputfile3}{
+     A list of genes detected by the functional module detection algorithm 3.
+  }
+  \item{inputfile4}{
+     A list of genes detected by the functional module detection algorithm 4.
+  }
+  \item{inputfile5}{
+     A list of genes detected by the functional module detection algorithm 5.
+  }
+  \item{intersectionThreshold}{
+    The threshold to define over how many alogrithms the intersection module should be detected.
+  }
+  \item{ outputfile1}{
+    A list of genes identified in the intersection module by the comparison
+  }
+  \item{outputPlot}{
+    A  plot for the Venn diagram.
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+modules <- tempfile()
+performPCA(
+  inputfile1 = 'resources/ModuleNodes/nodeOfBioNetOC.txt',
+  inputfile2 = 'resources/ModuleNodes/nodeOfClustExOC.txt',
+  inputfile3 = 'resources/ModuleNodes/empty.txt',
+  inputfile4 = 'resources/ModuleNodes/empty.txt',
+  inputfile5 = 'resources/ModuleNodes/empty.txt',
+  intersectionThreshold = 2,
+  outputfile1      = modules,
+  outputPlot = t )
+
+}

@@ -1,0 +1,47 @@
+\name{TF_Enrichment}
+
+\alias{TF_Enrichment}
+\title{Perform TF Enrichment}
+
+\description{
+Wrapper for the RcisTarget Bioconductor library for identifying enriched transcription factors from differentially expression anaylsis.
+}
+
+\usage{
+TFEnrichment <- function(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  species = GalaxyCharacterParam(c("Human","Mouse")),
+  foldChangeOnly = GalaxyLogicalParam(),
+  enrichmentTable = GalaxyOutput("TF_EnrichmentTable", "tabular"))
+}
+
+\arguments{
+  \item{differentialExpression}{
+    A tabular table with GeneName, the Log2FoldChange and adjusted p-values (optional). A threshold of absolute 1.5 fold change and adjusted p-value of <=0.05 is used to define differentially expressed genes.
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use.
+  }
+  \item{foldChangeOnly}{
+    Logical value - whether to use the adjusted p-values in defining differntially expressed genes.
+  }
+  \item{enrichmentTable}{
+    A tabular table detailing the significant TFs and the target genes
+  }
+
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+
+t<-tempfile()
+TF_Enrichment(differentialExpression = sourcefile1,species = "Mouse",foldChangeOnly = T,enrichmentTable = t)
+}

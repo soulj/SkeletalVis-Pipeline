@@ -1,0 +1,59 @@
+<tool id="kallistoQuant" name="kallistoQuant" version="0.01">
+    <description>wrapper of kallisto, transcript quantification tool</description>
+    <command>   
+ kallisto quant -i $index --plaintext $stranded $single -o ./ 
+#for $input in $inputs
+$input
+#end for 
+>> $log 2&gt;&amp;1
+    </command>
+    <inputs>
+        <param name="index" format="data" type="data" label="Select a kallisto index">
+            <validator type="empty_field" message="This field is required."/>
+        </param>
+        <param name="inputs" type="data_collection" label="fastq files" help="FASTQ files.">
+            <validator type="empty_field" message="This field is required."/>
+        </param>
+        <param name="single" type="boolean" checked="false" label="single ended?" truevalue="--single -l 200 -s 20" falsevalue="" />
+        <param optional="false" name="stranded" type="select" help="Option of stranded" label="[required] Stranded" force_select="FALSE">
+            <validator type="empty_field" message="This field is required."/>
+            <option value=" ">None</option>
+            <option value="--rf-stranded">Reverse</option>
+            <option value="--fr-stranded">-Forward</option>
+        </param>
+    </inputs>
+    <outputs>
+        <data name="log"   format="txt" label="${inputs.name}.log"/>
+        <data name="run_info" format="txt" from_work_dir="run_info.json" label="${inputs.name}.run_info"/>
+        <data name="abundances" format="tabular" from_work_dir="abundance.tsv" label="${inputs.name}.abundances"/>
+    </outputs>
+    <tests>
+        <test>
+            <param name="index" value="transcripts" />
+            <param name="inputs">
+                <collection type="list">
+                    <element name="fastq1" value="reads_1.fastq.gz"/>
+                    <element name="fastq2" value="reads_2.fastq.gz"/>
+                </collection>
+            </param>
+            <param name="stranded" value="None"/>
+            <output name="log" file="kallisto.log" compare="diff" lines_diff="4"/>
+            <output name="run_info" file="run_info.json" compare="diff" lines_diff="4"/>
+            <output name="abundances" file="abundance.tsv"/>
+        </test>
+    </tests>
+    <help>
+<![CDATA[
+Quantifies fastq files corresponding to a single sample using a premade kallisto index
+
+Input: 
+a kallisto index
+a data collection of fastq files in the correct order i.e. sample1_R1.fastq sample1_R2.fastq sample2_R1.fastq sample2_R2.fastq
+
+Output:
+Three txt files the log, run_info and the transcript abundances.
+
+]]>
+
+    </help>
+</tool>

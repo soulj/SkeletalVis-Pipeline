@@ -1,0 +1,70 @@
+\name{performPCA}
+
+\alias{performPCA}
+\title{Read array and perform principal component analysis}
+
+\description{
+  Principal component analysis(PCA) is a datareduction technique that allows to simplify multidimensional data sets to 2 dimensions for     plotting purposes and visual variance analysis.
+  This function will read affymetrix array samples and perform principal component analysis for them.
+  
+  The output of above eample should be a lattice plot figure for the variances of samples between the first two pricipal components
+    
+}
+
+\usage{
+performPCA(
+  inputfile1=GalaxyInputFile(required=TRUE),
+  inputfile2=GalaxyInputFile(required=FALSE),
+  inputfile3=GalaxyInputFile(required=FALSE),
+  inputfile4=GalaxyInputFile(required=FALSE),
+  inputfile5=GalaxyInputFile(required=FALSE),
+  inputfile6=GalaxyInputFile(required=FALSE),
+  outputPlot=GalaxyOutput("output", "tabular")
+)
+}
+
+\arguments{
+  \item{inputfile1}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile2}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile3}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile4}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile5}{
+    Affymetrix CEL Data File Format
+  }
+  \item{inputfile6}{
+    Affymetrix CEL Data File Format
+  }
+  \item{outputPlot}{
+    A lattice plot for the PCA results.
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+performPCA(
+  inputfile1  = 'resources/PCAsample/GSM1072316_pes1_WT_OB_I.CEL',
+  inputfile2  = 'resources/PCAsample/GSM1072317_pes1_WT_OB_II.CEL',
+  inputfile3  = 'resources/PCAsample/GSM1072318_pes1_KI_OB_I.CEL',
+  inputfile4  = 'resources/PCAsample/GSM1072319_pes1_KI_OB_II.CEL',
+  inputfile5  = 'None',
+  inputfile6  = 'None',
+  outputPlot = t )
+
+}

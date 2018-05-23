@@ -1,0 +1,96 @@
+\name{DESeq2FoldChange}
+
+\alias{DESeq2FoldChange}
+
+\title{DESeq2FoldChange}
+
+\description{
+Performs DESeq2 analysis on RNA-Seq data quantified by Kallisto
+
+Input
+An R list stored as rdata (from KallistoAbundancestoGeneCountMatrix)
+
+A sampleTable txt file detailing the sample names and the experimental factor in the format
+
+  \tabular{ccc}{
+  SampleName \tab Condition1 \tab Condition2\cr
+  Control_1 \tab Batch1 \tab Control \cr
+  Mutant_1 \tab Batch2  \tab Mutant
+  }
+A conditionTable txt file detailing the experimental factor and the levels of that factor to be compared in the format:
+
+  \tabular{ccc}{
+  FactorName \tab  Numerator \tab  Denominator\cr
+  Condition1\tab Mutant \tab Control \cr
+  Condition2 \tab Batch1  \tab Batch2
+  }
+
+Species - either "Human" or "Mouse"
+
+Wherever the only fold changes should be calculated as in the case where there are no experimental replicates.
+
+
+Output: 
+A tabular table with ID, GeneName and the Log2FoldChange and adjusted p-values (where appropriate) for all the comparisons.
+
+}
+
+\usage{
+DESeq2FoldChange<-function(
+txiData=GalaxyInputFile(required=T,formatFilter="rdata"),
+sampleTable=GalaxyInputFile(required=T,formatFilter="tabular"),
+comparisonsTable=GalaxyInputFile(required=T,formatFilter="tabular"),
+species=GalaxySelectParam(c("Human","Mouse"),required=T),
+technicalReplicates=GalaxyLogicalParam(),
+foldChangeOnly=GalaxyLogicalParam(),
+foldChangeTable=GalaxyOutput("foldChangeTable","tabular"))
+}
+
+\arguments{
+  \item{txiData}{
+    A list generated from the KallistoAbundancestoGeneCountMatrix module stored as rdata
+  }
+  \item{sampleTable}{
+    A sampleTable txt file detailing the sample names and the experimental factor
+  }
+  \item{comparisonsTable}{
+    A comparisonsTable txt file detailing the experimental factor and the levels of that factor
+  }
+  \item{species}{
+    Species either Human or Mouse
+  }
+  \item{technicalReplicates}{
+    Logical - does the dataset contain experimental replicates to be collpased. Uses the first two factors defined in the sampleTable to determine the technical replicates.
+  }
+  \item{foldChange only}{
+    logical - should only the fold changes be calculated?
+  }
+  \item{foldChangeTable}{
+    A foldChangeTable text file
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+t <- tempfile()
+
+
+DESeq2FoldChange(
+txiData=sourcefile1,
+sampleTable=sourcefile2,
+conditionTable=sourcefile3,
+species="Human",
+foldChangeOnly=F,
+foldChangeTable=t)
+}
+
+
+}

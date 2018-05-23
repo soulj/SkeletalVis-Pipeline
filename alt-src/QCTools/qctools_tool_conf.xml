@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<toolbox tool_path="../rgalaxy-tools">
+  <section name="QCTools" id="QCTools">
+    <tool file="multiqc/multiqc.xml"/>
+    <tool file="microarrayQC/microarrayQC.xml"/>
+  </section>
+</toolbox>

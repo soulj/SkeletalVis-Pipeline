@@ -1,0 +1,59 @@
+\name{GOEnrichment}
+
+\alias{GOEnrichment}
+\title{Perform GO Enrichment analysis}
+
+\description{
+Wrapper for the goseq Bioconductor library for identifying GOTerms enriched in differentially expressed genes while taking into account the gene length bias present in RNA-Seq data. 
+}
+
+\usage{
+GOEnrichment <- function(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  geneLengths = GalaxyInputFile(required = T, formatFilter = "tabular"),
+  species=GalaxySelectParam(c("Human","Mouse")),
+  foldChangeOnly = GalaxyLogicalParam(),
+  enrichedTerms     = GalaxyOutput("enrichedTerms", "tabular"),
+  enrichedTermsReduced   = GalaxyOutput("enrichedTerms.reduced", "tabular"),
+  mdsPlot   = GalaxyOutput("GO.MDS", "html")
+}
+
+\arguments{
+  \item{differentialExpression}{
+    A tabular table with GeneName, the Log2FoldChange and adjusted p-values (optional). A threshold of absolute 1.5 fold change and adjusted p-value of <=0.05 is used to define differentially expressed genes.
+  }
+  \item{geneLengths}{
+    A tabular table of genenames and effective exon length.
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use.
+  }
+  \item{foldChangeOnly}{
+    Logical value - whether to use the adjusted p-values in defining differentially expressed genes.
+  }
+  \item{enrichedTerms}{
+    A tabular table detailing the significant GO Terms.
+  }
+  \item{enrichedTerms.reduced}{
+   A tabular table detailing the significant GO Terms after redundancy reduction
+  }
+   \item{mdsPlot}{
+   Self contained html MDS plot of the reduced GO term semantic similarities
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+
+GOEnrichment(differentialExpression = sourcefile1,geneLengths = sourcefile2,species = "Mouse",foldChangeOnly = T,enrichedTerms = GOTerms,enrichedTerms.reduced = GOTerms.reduced,mdsPlot = mdsPlot)
+
+
+}

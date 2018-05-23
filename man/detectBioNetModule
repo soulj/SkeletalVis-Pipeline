@@ -1,0 +1,77 @@
+\name{detectBioNetModule}
+
+\alias{detectBioNetModule}
+\title{Detect an active module of an interactome}
+
+\description{
+  This function will detect a "active" module of a given interactome according to microarray experimental profiles. This module is differentially expressed between mutant and wild type samples. 
+  The input includes one input p values derrived from differential expression analysis and a two column interactome
+  This function fits the Beta-uniform mixture model to the the distribution for claculating score of each node in the interactome.
+  Then Heinz algorithm is used to calculate an optimal scoring subnetwork of the interactome accroding to the node score. 
+  The format of the input gene list with their p value contained one gene symbol, one log fold change and one p value per row.
+
+  The format of interactome contained two columns of gene symbol as below:
+
+:: 
+    
+  ORC5	ORC5
+  RXRA	RXRA
+  AP2A2	CD22
+  UBR2	UBE2B
+  LNX1	IGSF5
+  MED1	RXRA
+  
+  The function will produce a list of  nodes which are present in the detected module.
+  The output should be a list of gene symbol as bellow:.
+ 
+  
+::
+
+  IGF1
+  FYN
+  DOK1
+  VEGFA
+  UBC
+  CD44
+}
+
+\usage{
+detectBioNetModule(
+  differentialExpression = GalaxyInputFile(required=TRUE),
+  interactome = GalaxyInputFile(required=TRUE),
+  foldChangeOnly = GalaxyLogicalParam(),
+  moduleNodes = GalaxyOutput("moduleNodes", "tabular")) 
+}
+
+\arguments{
+  \item{differentialExpression}{
+     List of gene symbol, log fold change and p value drived from differential expression analysis 
+  }
+  \item{interactome}{
+     Interactome of the undirected network
+  }
+  \item{moduleNodes}{
+     List of nodes in the disease functional module detected by BioNet accroding to experimental profiles and the network model
+  }
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+sourcefile1 <- 'resources/differentialExpressionPValues.tabular'
+sourcefile2 <- 'resources/MouseNetwork.txt'
+modulenodes <- tempfile()
+
+detectBioNetModule(
+  differentialExpression = sourcefile1,
+  interactome = sourcefile2,
+  foldChangeOnly = FALSE,
+  moduleNodes = GalaxyOutput("moduleNodes", "tabular"))
+}

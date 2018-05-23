@@ -1,0 +1,16 @@
+import(methods)
+import(AnnotationDbi)
+
+### Only put what is statically exported here. All the AnnObj instances
+### created at load time are dynamically exported (refer to R/zzz.R for
+### the details).
+export(
+    AgilentRat014879,
+    AgilentRat014879_dbconn,
+    AgilentRat014879_dbfile,
+    AgilentRat014879_dbschema,
+    AgilentRat014879_dbInfo,
+
+    AgilentRat014879ORGANISM
+)
+

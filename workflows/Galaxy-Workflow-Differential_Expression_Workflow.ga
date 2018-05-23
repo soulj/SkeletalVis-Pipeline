@@ -1,0 +1,238 @@
+{
+    "a_galaxy_workflow": "true", 
+    "annotation": "", 
+    "format-version": "0.1", 
+    "name": "Differential Expression Workflow", 
+    "steps": {
+        "0": {
+            "annotation": "", 
+            "id": 0, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "accessionNumber"
+                }, 
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "site"
+                }, 
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "platform"
+                }, 
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "splitField"
+                }, 
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "numberFileRemove"
+                }, 
+                {
+                    "description": "runtime parameter for tool Get Microarray Expression Data", 
+                    "name": "numberLinesSkip"
+                }
+            ], 
+            "label": null, 
+            "name": "Get Microarray Expression Data", 
+            "outputs": [
+                {
+                    "name": "expressionData", 
+                    "type": "rdata"
+                }
+            ], 
+            "position": {
+                "left": 176.90625, 
+                "top": 274.40625
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "getMicroarrayExpressionData", 
+            "tool_state": "{\"accessionNumber\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"__page__\": 0, \"grepString\": \"\\\"\\\"\", \"__rerun_remap_job_id__\": null, \"site\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"remove\": \"\\\"False\\\"\", \"platform\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"removeSample\": \"\\\"\\\"\", \"splitField\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"splitPos\": \"\\\"1\\\"\", \"grepExpression\": \"\\\"False\\\"\", \"numberFileRemove\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"numberLinesSkip\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"splitSep\": \"\\\"\\\"\", \"split\": \"\\\"False\\\"\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "73aac030-344f-447e-b1ab-18b822cf42fe"
+        }, 
+        "1": {
+            "annotation": "", 
+            "id": 1, 
+            "input_connections": {}, 
+            "inputs": [
+                {
+                    "description": "", 
+                    "name": "Input Dataset"
+                }
+            ], 
+            "label": null, 
+            "name": "Input dataset", 
+            "outputs": [], 
+            "position": {
+                "left": 199.90625, 
+                "top": 387.40625
+            }, 
+            "tool_errors": null, 
+            "tool_id": null, 
+            "tool_state": "{\"name\": \"Input Dataset\"}", 
+            "tool_version": null, 
+            "type": "data_input", 
+            "user_outputs": [], 
+            "uuid": "cc784350-6b51-44e9-8849-221190e94870"
+        }, 
+        "2": {
+            "annotation": "", 
+            "id": 2, 
+            "input_connections": {
+                "comparisonsTable": {
+                    "id": 1, 
+                    "output_name": "output"
+                }, 
+                "inputfile": {
+                    "id": 0, 
+                    "output_name": "expressionData"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Characteristic Direction From Array Express", 
+            "outputs": [
+                {
+                    "name": "chrDirTable", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 476, 
+                "top": 100
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "characteristicDirectionFromArrayExpress", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"comparisonsTable\": \"null\", \"annotationFile\": \"\\\"bovine.db\\\"\", \"platform\": \"\\\"Affy\\\"\", \"offset\": \"\\\"0\\\"\", \"inputfile\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "f5760b2c-fb12-4b83-a0b0-783b9bb1e483"
+        }, 
+        "3": {
+            "annotation": "", 
+            "id": 3, 
+            "input_connections": {
+                "comparisonsTable": {
+                    "id": 1, 
+                    "output_name": "output"
+                }, 
+                "inputfile": {
+                    "id": 0, 
+                    "output_name": "expressionData"
+                }
+            }, 
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Differential Expression From Array Express", 
+                    "name": "annotationFile"
+                }, 
+                {
+                    "description": "runtime parameter for tool Differential Expression From Array Express", 
+                    "name": "platform"
+                }
+            ], 
+            "label": null, 
+            "name": "Differential Expression From Array Express", 
+            "outputs": [
+                {
+                    "name": "foldChangeTable", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 505.890625, 
+                "top": 264.390625
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "differentialExpressionFromArrayExpress", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"comparisonsTable\": \"null\", \"annotationFile\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"platform\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"offset\": \"\\\"0\\\"\", \"inputfile\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "47f63009-db4a-48fe-9425-459be339472e"
+        }, 
+        "4": {
+            "annotation": "", 
+            "id": 4, 
+            "input_connections": {
+                "comparisonsTable": {
+                    "id": 1, 
+                    "output_name": "output"
+                }, 
+                "inputfile": {
+                    "id": 0, 
+                    "output_name": "expressionData"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "Perform P C Afrom Array Express", 
+            "outputs": [
+                {
+                    "name": "pcaPlot", 
+                    "type": "png"
+                }, 
+                {
+                    "name": "geneInfluence", 
+                    "type": "tabular"
+                }
+            ], 
+            "position": {
+                "left": 513.9375, 
+                "top": 481.9375
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "performPCAfromArrayExpress", 
+            "tool_state": "{\"__page__\": 0, \"foldChangeOnly\": \"\\\"False\\\"\", \"__rerun_remap_job_id__\": null, \"comparisonsTable\": \"null\", \"annotationFile\": \"\\\"bovine.db\\\"\", \"platform\": \"\\\"Affy\\\"\", \"offset\": \"\\\"0\\\"\", \"inputfile\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "a2f48ae1-7834-4e14-9d04-26fd017a4ce8"
+        }, 
+        "5": {
+            "annotation": "", 
+            "id": 5, 
+            "input_connections": {
+                "comparisonsTable": {
+                    "id": 1, 
+                    "output_name": "output"
+                }, 
+                "inputfile": {
+                    "id": 0, 
+                    "output_name": "expressionData"
+                }
+            }, 
+            "inputs": [], 
+            "label": null, 
+            "name": "microarrayQC", 
+            "outputs": [
+                {
+                    "name": "html_file", 
+                    "type": "html"
+                }
+            ], 
+            "position": {
+                "left": 503.4375, 
+                "top": 665.9375
+            }, 
+            "post_job_actions": {}, 
+            "tool_errors": null, 
+            "tool_id": "microarrayQC", 
+            "tool_state": "{\"accessionNumber\": \"\\\"\\\"\", \"__page__\": 0, \"__rerun_remap_job_id__\": null, \"comparisonsTable\": \"null\", \"platform\": \"\\\"Affy\\\"\", \"offset\": \"\\\"0\\\"\", \"inputfile\": \"null\"}", 
+            "tool_version": "1.0", 
+            "type": "tool", 
+            "user_outputs": [], 
+            "uuid": "d092f638-34bb-408a-a8fb-aecbdbcc4155"
+        }
+    }, 
+    "uuid": "39c50963-40e7-4778-9da3-f25640896a21"
+}

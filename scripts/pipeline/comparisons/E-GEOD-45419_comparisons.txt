@@ -1,0 +1,7 @@
+Factor	Numerator	Denominator
+Subtype	ER_positive	Benign
+Subtype	Triple_negative	Benign
+Subtype	HER2_positive	Benign
+Subtype	ER_positive	Triple_negative
+Subtype	Triple_negative	HER2_positive
+Subtype	HER2_positive	ER_positive

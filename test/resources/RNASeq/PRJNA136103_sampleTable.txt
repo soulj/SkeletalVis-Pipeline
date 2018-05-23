@@ -1,0 +1,2 @@
+Sample	File	Genotype	
+yeast_1	SRR096441	WT

@@ -1,0 +1,191 @@
+---
+title: "Validation"
+output: html_notebook
+---
+
+Set up the data
+```{r}
+library(tidyverse)
+#load the accessions
+accessions <- read.delim("accessions.txt",stringsAsFactors = F)
+accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
+
+#Load the experiment table
+expTable<-read_csv(file = "data/expTable.csv")
+
+#load the similarity scores
+load(file = "mergedZscores.RDS")
+```
+
+Summary of data at exp level
+```{r}
+
+annotationTable <- expTable[,c("Species","ExpType","Tissue","platform")]
+annotationTable$ExpType <- gsub("Gene perturbation","Gene_perturbation",annotationTable$ExpType)
+annotationTable$Tissue <- gsub("Cell line","Cell_Line",annotationTable$Tissue)
+annotationTable$ExpType <- sapply(strsplit(annotationTable$ExpType,split = " "),"[[",1)
+annotationTable$Tissue <- sapply(strsplit(annotationTable$Tissue,split = " "),"[[",1)
+annotationTable$ExpType <- gsub("Gene_perturbation","Gene perturbation",annotationTable$ExpType)
+annotationTable$Tissue <- gsub("Cell_Line","Cell line",annotationTable$Tissue)
+
+annotationTable[ grep("Agilent",annotationTable$platform),"platform"] <- "Agilent" 
+annotationTable[ grep("Affy",annotationTable$platform),"platform"] <- "Affymetrix" 
+
+annotationTable <-  lapply(annotationTable,function(x) stack(table(x)))
+annotationTable<-do.call(rbind, lapply(annotationTable, data.frame, stringsAsFactors=FALSE))
+annotationTable$Type<-gsub(x = rownames(annotationTable),pattern = "\\..+",replacement = "",perl = T)
+colnames(annotationTable)<-c("Count","Variable","Type")
+
+
+dataNames<-c(`Tissue` = "Tissue",
+                    `Species` = "Species",
+                    `ExpType` = "Perturbation Type",
+                    `platform` = "Platform")
+
+ggplot(annotationTable,aes(x=Variable,y=Count,fill=Type))+geom_bar(stat="identity",fill="darkgrey")+facet_wrap(~Type,scale='free_x',labeller = as_labeller(dataNames)) + cowplot::theme_cowplot(font_size = 24) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),legend.position="none") + scale_fill_brewer(palette = "Set2") + ylab("Number of Experiments") + xlab("")
+ggsave("expSummary.png",device = "png",width = 8,height = 8)
+```
+
+Summary of data at comparison level
+```{r}
+annotationTable<- merge(accessions,expTable,by.x="accession",by.y="ID")
+annotationTable <- annotationTable[,c("Species","ExpType","Tissue","platform")]
+annotationTable$ExpType <- gsub("Gene perturbation","Gene_perturbation",annotationTable$ExpType)
+annotationTable$ExpType <- sapply(strsplit(annotationTable$ExpType,split = " "),"[[",1)
+annotationTable$Tissue <- sapply(strsplit(annotationTable$Tissue,split = " "),"[[",1)
+annotationTable$ExpType <- gsub("Gene_perturbation","Gene perturbation",annotationTable$ExpType)
+annotationTable$Tissue <- gsub("Cell","Cell line",annotationTable$Tissue)
+
+annotationTable[ grep("Agilent",annotationTable$platform),"platform"] <- "Agilent" 
+annotationTable[ grep("Affy",annotationTable$platform),"platform"] <- "Affymetrix" 
+
+annotationTable <-  lapply(annotationTable,function(x) stack(table(x)))
+annotationTable<-do.call(rbind, lapply(annotationTable, data.frame, stringsAsFactors=FALSE))
+annotationTable$Type<-gsub(x = rownames(annotationTable),pattern = "\\..+",replacement = "",perl = T)
+colnames(annotationTable)<-c("Count","Variable","Type")
+
+annotationTable <- annotationTable[ !(annotationTable$Type=="Tissue" & annotationTable$Count<15),]
+
+
+dataNames<-c(`Tissue` = "Tissue",
+                    `Species` = "Species",
+                    `ExpType` = "Perturbation Type",
+                    `platform` = "Platform")
+
+ggplot(annotationTable,aes(x=Variable,y=Count,fill=Type))+geom_bar(stat="identity",fill="darkgrey")+facet_wrap(~Type,scale='free_x',labeller = as_labeller(dataNames)) + cowplot::theme_cowplot(font_size = 24) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),legend.position="none") + scale_fill_brewer(palette = "Set2") + ylab("Number of Expression Responses")  + xlab("")
+ggsave("comparisonSummary.png",device = "png",width = 8,height = 8)
+```
+
+Valdidation of the similarity scores
+```{r}
+annotationTable<- merge(accessions,expTable,by.x="accession",by.y="ID")
+annotationTable <- annotationTable[ annotationTable$foldChangeOnly == "FALSE",]
+mergedZscores <- lapply( mergedZscores,function(x) x[x[,1] %in% annotationTable$combined,])
+
+HumanKneeOA_Damage <-c("GSE57218_1","GSE57218_2","E-MTAB-4304_1")
+RA <-c("GSE107363_1","E-GEOD-10024_2","GSE55235_2","GSE7669_1","GSE9329_1")
+MCDS <- c("GSE72261_2","GSE72261_3","GSE99306_1","GSE99306_7","GSE99306_10","GSE99306_13","GSE30628_1")
+IL1B_treatment <- c("E-GEOD-6119_1","GSE104793_1","GSE68428_2","GSE72575_4","GSE75181_2")
+DifferentiatingOsteoblasts <- c("GSE53982_1","GSE53982_2","E-MTAB-1391_1","E-MTAB-1391_2","E-MTAB-1391_3")
+TGFB_BMP <- c("GSE13604_1","E-GEOD-18648_1","E-GEOD-18648_2","E-MTAB-2450_1","GSE29233_1","GSE13837_1","GSE13837_2","GSE13837_3","GSE13837_4","GSE13837_5","GSE13837_6","GSE13837_7","GSE13837_8","GSE13837_9","GSE13837_10","GSE13837_11","GSE13837_12")
+SuperficalvsDeepZone <- c("E-GEOD-51994_2","E-GEOD-51994_1","E-GEOD-54216_1","GSE39795_2")
+Polycomb <- c("GSE66862_1","GSE84198_1","GSE84198_2")
+
+comparisons <-list(HumanKneeOA_Damage,RA,MCDS,IL1B_treatment,DifferentiatingOsteoblasts,TGFB_BMP,SuperficalvsDeepZone,Polycomb)
+names(comparisons) <- c("HumanKneeOA_Damage","RA","MCDS","IL1B_treatment","DifferentiatingOsteoblasts","TGFB_BMP","SuperficalvsDeepZone","Polycomb")
+
+
+dat <- mapply(function(x,y) {
+  dat <- accessions[accessions$combined %in% x,]
+  dat$Exp <- y
+  dat
+  
+} ,comparisons,names(comparisons),SIMPLIFY = F)
+
+dat <- rbind_list(dat)
+
+write_excel_csv(dat,path = "ValidationExps.xls")
+
+
+getRankSimilarity <- function(comparisons,mergedZscores){
+  
+  #for each comparison find the other comparisons and get the ranks
+  scores <- mergedZscores[comparisons]
+
+  ranks <- mapply(function(x,y) {
+    x <- cbind(x[,"comparisonID",drop=F],apply(-x[,-1],2,rank,ties.method= "random"))
+    print(y)
+    y <- gsub("(.*)_.*", "\\1",y)
+    print(y)
+    x <- x[ -grep(y,x[,1]),]
+    x},scores,comparisons,SIMPLIFY =F )
+  
+
+ 
+  ranks.within <- lapply(ranks,function(x) x[x[,1] %in% comparisons,])
+  ranks.outside <- lapply(ranks,function(x) x[!x[,1] %in% comparisons,])
+  
+  ranks.within <- rbind_list(ranks.within)
+  ranks.outside <- rbind_list(ranks.outside)
+  
+  return(list(ranks.within,ranks.outside))
+}
+
+
+similarityData<-lapply(comparisons,getRankSimilarity,mergedZscores)
+similarityData <- lapply(similarityData,"[[",1)
+similarityData <- rbind_list(similarityData)
+similarityData <- gather(similarityData[,-1], key, value)
+
+boxplot(similarityData$value ~ similarityData$key)
+
+ggplot(similarityData,aes(x=value,col=key)) + geom_line(stat="Density",size=2) + cowplot::theme_cowplot(font_size = 20) + scale_x_continuous(name = "Rank") + scale_y_continuous(name = "Density")+ theme(legend.title=element_blank()) + scale_color_manual(labels = c("Characteristic Direction Jaccard", "Fold Change Cosine","Fold Change Jaccard","Significance Jaccard"),values=c("blue","red","green","orange")) + theme(legend.position = c(0.3, 0.8))
+
+# ggplot(similarityData,aes(y=value,x=key)) + geom_violin(fill="darkgrey") + cowplot::theme_cowplot(font_size = 20) + theme(legend.title=element_blank()) + scale_y_continuous(name = "Rank") + scale_x_discrete(name = "Similarity Method")
+
+ggsave(filename = "validation.png",width = 7,height=4)
+
+```
+Assessment of bias in the data
+```{r}
+Species <- c("Mouse","Rat","Human")
+Platform <-c("RNASeq","Affy","Illumina","1C-Agilent")
+Tissue <- c("Bone","Cartilage","Synovium")
+
+getComparisons <- function(x,Field){
+  return(na.omit(annotationTable[ annotationTable[,Field]==x,"combined"]))
+}
+
+comparisons.species <- lapply(Species,getComparisons,"Species")
+comparisons.platform <- lapply(Platform,getComparisons,"platform")
+comparisons.tissue <- lapply(Tissue,getComparisons,"Tissue")
+
+comparisonsAll <- list(comparisons.species,comparisons.platform,comparisons.tissue)
+
+getSimilarity <- function(comparisons,mergedZscores){
+  similarityData<-lapply(comparisons,getRankSimilarity,mergedZscores)
+  similarityData <- lapply(similarityData,"[[",1)
+  similarityData <- rbind_list(similarityData)
+  similarityData <- gather(similarityData[,-1], key, value)
+  return(similarityData)
+}
+
+similarities <- lapply(comparisonsAll,getSimilarity,mergedZscores)
+
+
+
+
+g <- lapply(similarities, function(x) {
+    # 
+    # ggplot(x,aes(x=key,y=value)) + geom_violin(fill="darkgrey") + cowplot::theme_cowplot(font_size = 20) + theme(legend.title=element_blank()) + scale_y_continuous(name = "Rank") + scale_x_discrete(name = "Method")
+  ggplot(x,aes(x=value,col=key)) + geom_line(stat="Density",size=2) + cowplot::theme_cowplot(font_size = 20) + scale_x_continuous(name = "Rank") + scale_y_continuous(name = "Density")+ theme(legend.title=element_blank()) +  scale_color_manual(labels = c("Characteristic Direction Jaccard", "Fold Change Cosine","Fold Change Jaccard","Significance Jaccard"),values=c("blue","red","green","orange"))
+
+  })
+
+
+ggsave(g[[1]],filename = "bias_species.svg",width = 10,height=7)
+ggsave(g[[2]],filename = "bias_platform.svg",width = 10,height=7)
+ggsave(g[[3]],filename = "bias_tissue.svg",width = 10,height=7)
+
+```
+

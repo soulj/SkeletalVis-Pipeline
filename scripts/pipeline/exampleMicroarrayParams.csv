@@ -1,0 +1,6 @@
+accessionNumber	PMID	Tissue	site	species	platform	annotationFile	foldChangeOnly	grepExpression	grepString	numberLinesSkip	numberFileRemove	offset	split	splitField	splitSep	splitPos	remove	removeSample
+GSE60737	25733872	Cell line	GEO	Mouse	1C-Agilent	MmAgilentDesign026655.db	TRUE	FALSE	FALSE		1		FALSE				FALSE	
+E-MTAB-3010		Bone	ArrayExpress	Human	1C-Agilent	hgug4112a.db	TRUE	FALSE	FALSE				FALSE				FALSE	
+GSE21093	20717918	Cell line	GEO	Mouse	1C-Agilent	AgilentMouse014868.db	TRUE	FALSE	FALSE				FALSE				FALSE	
+E-GEOD-37287	22814601	Cell line	ArrayExpress	Mouse	1C-Agilent	AgilentMouse014868.db	TRUE	FALSE	FALSE				FALSE				FALSE	
+

@@ -1,0 +1,42 @@
+\name{KallistoAbundancestoGeneCountMatrix}
+\alias{KallistoAbundancestoGeneCountMatrix}
+\title{Converts transcript-level estimates from kallisto into a gene level counts matrix}
+
+\description{
+Wrapper for tximport to import transcript-level estimates from kallisto and summarise abundances, counts, and transcript lengths to the gene-level.
+}
+
+\usage{
+KallistoAbundancestoGeneCountMatrix<-function(filepaths,filenames,species=c("Human","Mouse"),output)
+}
+
+\arguments{
+  \item{filepaths}{
+    File paths of kallisto abundance text files
+  }
+  \item{geneExonLengths}{
+    File names of the text files correponding to the sample names. Used as column names in output tables
+  }
+  \item{species}{
+    Accepted values are "Human" or "Mouse". Defines the annotations to use
+  }
+  \item{output}{
+    list of gene level abundance, count, and transcript length tables stored in rdata format
+  }
+
+}
+
+\value{
+  invisible(NULL)
+}
+
+\seealso{
+    \code{\link{galaxy}}, 
+    \code{\link{GalaxyConfig}}, \code{\link{GalaxyOutput}}
+}
+
+\examples{
+output <- tempfile()
+KallistoAbundancestoGeneCountMatrix(sourcefile1,sourcefile2,species=Human",output){
+
+}

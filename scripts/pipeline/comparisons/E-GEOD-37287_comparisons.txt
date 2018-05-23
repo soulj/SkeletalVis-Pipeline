@@ -1,0 +1,5 @@
+Factor	Numerator	Denominator
+Comment..Sample_title.	Interdigital Tissue Tbr2Prx1KO mutants	Interdigital Tissue Controls
+Comment..Sample_title.	Growth Plate Chondrocyte Tgfbr2Prx1KO  mutants	Growth Plate Chondrocyte Controls
+Comment..Sample_title.	Interzone Tgfbr2Prx1KO mutants	Interzone Controls
+

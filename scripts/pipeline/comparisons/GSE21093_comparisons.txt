@@ -1,0 +1,2 @@
+Factor	Numerator	Denominator
+treatment.group	RCCS	control
