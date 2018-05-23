@@ -1,4 +1,4 @@
-Contains the code and installation files for the [Galaxy](https://galaxyproject.org) pipeline developed as part of [SYBIL](https://secure.sybil-fp7.eu/sp/)
+Contains the code and installation files for the [Galaxy](https://galaxyproject.org) pipeline developed as part of [SYBIL](http://www.sybil-fp7.eu/)
 
 What are all the directories for?
 
