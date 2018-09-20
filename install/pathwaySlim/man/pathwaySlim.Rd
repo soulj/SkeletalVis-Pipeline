@@ -4,10 +4,7 @@
 \name{pathwaySlim}
 \alias{pathwaySlim}
 \alias{pathwaySlim-package}
-\title{pathwaySlim.
-Provides slim pathway to gene annotations for mouse and human}
+\title{pathwaySlim.}
 \description{
 pathwaySlim.
-Provides slim pathway to gene annotations for mouse and human
 }
-
