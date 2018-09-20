@@ -5,6 +5,7 @@ drugEnrichment <- function(
   homology = GalaxyInputFile(required=FALSE),
   foldChangeOnly         = GalaxyLogicalParam(),
   species=GalaxySelectParam(c("Human","Mouse","Rat","Horse","Zebrafish","Cow","Pig")),
+  foldchange = GalaxyNumericParam(1.5),
   padj = GalaxyNumericParam(0.05),
   enrichedDrugsMimic    = GalaxyOutput("enrichedDrugsMimic", "tabular"),
   enrichedDrugsReverse    = GalaxyOutput("enrichedDrugsReverse", "tabular")) {
@@ -33,8 +34,8 @@ drugEnrichment <- function(
       diffExp[,1]<-diffExp[,"gene_name.human"]
     }
 
-    upGenes <- diffExp[ diffExp[,2]>=log2(1.5),1]
-    downGenes <- diffExp[ diffExp[,2]<=log2(1/1.5),1]
+    upGenes <- diffExp[ diffExp[,2]>0,1]
+    downGenes <- diffExp[ diffExp[,2]<0,1]
     
     
     url <- "http://amp.pharm.mssm.edu/L1000CDS2/query"
@@ -146,12 +147,12 @@ drugEnrichment <- function(
     differentialExpression<-  differentialExpression %>%
       group_by(GeneSymbol) %>%
       dplyr::slice(which.max(abs(2))) %>% as.data.frame
-    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5),])
+    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange),])
   } else{
     differentialExpression<-  differentialExpression %>%
       group_by(GeneSymbol) %>%
       dplyr::slice(which.min(3)) %>% as.data.frame
-    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5) & differentialExpression[,3] <=padj,])
+    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange) & differentialExpression[,3] <=padj,])
   }
   
   #get the enriched pathways

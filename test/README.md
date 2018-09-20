@@ -5,5 +5,5 @@ The scripts depend on having RGalaxy installed and the install_RGalaxy.R in the 
 An example of running a test script is:
 
 ```
-R --no-save < test_cutFoldChangeTable.R
+R --no-save < test_filterForPresentProbes.R
 ```

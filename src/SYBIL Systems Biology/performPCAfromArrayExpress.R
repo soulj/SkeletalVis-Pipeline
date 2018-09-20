@@ -42,14 +42,14 @@ performPCAfromArrayExpress <- function(
     
     
     # assemble the data for the plot
-    intgroup.df <- as.data.frame(pData(eset)[expFactors], drop=FALSE)
+    intgroup.df <- as.data.frame(pData(eset)[,expFactors], drop=FALSE)
     
     #fix the names in case there are spaces
     intgroup.df<-as.data.frame(apply(intgroup.df,2,function(x) paste("`", x, "`", sep="")))
     colnames(intgroup.df)<-colnames(pData(eset)[expFactors])
     
     
-    d <- data.frame(PC1=pca$x[,1], PC2=pca$x[,2],t(intgroup.df) )
+    d <- data.frame(PC1=pca$x[,1], PC2=pca$x[,2],intgroup.df )
     
     
     if (length(expFactors)>1){
@@ -142,9 +142,9 @@ performPCAfromArrayExpress <- function(
   
   #### Preprocessing ####
   
-  if(platform=="2C-Agilent"){
-    stop("2C-Agilent PCA not possible at present")
-  }
+  # if(platform=="2C-Agilent"){
+  #   stop("2C-Agilent PCA not possible at present")
+  # }
   
   
   #get the object whatever it was named
@@ -223,27 +223,29 @@ performPCAfromArrayExpress <- function(
     
   }   else if (platform == "2C-Agilent"){
     
-    ## normalize within and between arrays
-    eset <- limma::backgroundCorrect(inputfile, method="normexp", offset=50)
-    eset<-limma::normalizeWithinArrays(eset,method="loess")
-    eset<-limma::normalizeBetweenArrays(eset,method="Aquantile")
-    
-    #aggregate the duplicated gene probes
-    annotationFile<-gsub(".db",replacement = "",annotationFile)
-    geneIDs <- na.omit(stack(mget(as.character(eset$genes$ProbeName), get(paste(annotationFile,"SYMBOL",sep="")), ifnotfound = NA)))
-    
-    eset<-eset[ which(eset$genes$ProbeName %in% geneIDs$ind),]
-    eset$genes$GeneName<-geneIDs$values
-    eset<-avereps(eset, eset$genes$GeneName)
-    
-    Cy3<-comparisonsTable[1,"Cy3"]
-    Cy5<-comparisonsTable[1,"Cy5"]
-    eset$targets<-data.frame(FileName=colnames(eset$M),Cy5=gsub(' +',' ',eset$targets[,Cy5]),Cy3=gsub(' +',' ',eset$targets[,Cy3]))
-    
-    #convert the normalised data back into an RG list for the PCA
-    eset<-RG.MA(eset)
-    expMat<-cbind(eset$R,eset$G)
-    
+      ## normalize within and between arrays
+      eset <- limma::backgroundCorrect(inputfile, method="normexp", offset=50)
+      eset<-limma::normalizeWithinArrays(eset,method="loess")
+      eset<-limma::normalizeBetweenArrays(eset,method="Aquantile")
+      
+      #aggregate the duplicated gene probes
+      annotationFile<-gsub(".db",replacement = "",annotationFile)
+      geneIDs <- na.omit(stack(mget(as.character(eset$genes$ProbeName), get(paste(annotationFile,"SYMBOL",sep="")), ifnotfound = NA)))
+      
+      eset<-eset[ which(eset$genes$ProbeName %in% geneIDs$ind),]
+      eset$genes$GeneName<-geneIDs$values
+      eset<-avereps(eset, eset$genes$GeneName)
+      
+      Cy3<-comparisonsTable[1,"Cy3"]
+      Cy5<-comparisonsTable[1,"Cy5"]
+      eset$targets<-data.frame(FileName=colnames(eset$M),Cy5=gsub(' +',' ',eset$targets[,Cy5]),Cy3=gsub(' +',' ',eset$targets[,Cy3]))
+      
+      exprs <- exprs.MA(eset)
+      targets <- data.frame(as.vector(t(cbind(as.character(eset$targets$Cy5),as.character(eset$targets$Cy3)))))
+      colnames(targets)<-comparisonsTable$Factor[1]
+
+      eset <- ExpressionSet(assayData = as.matrix(exprs),
+                            phenoData = new("AnnotatedDataFrame", as.data.frame(targets)))
     }
   
   ##PCA
@@ -251,9 +253,8 @@ performPCAfromArrayExpress <- function(
   #2 colour arrays require special treatment
   if (platform == "2C-Agilent"){
     
-    factors<-as.character(unique(comparisonsTable[,1]))
-    design<-make2CModelMatrix(eset$targets,comparisonsTable)
-    
+    pca<-PCA.eset(exprs,eset,comparisonsTable$Factor[1])
+
     
   } else if (foldChangeOnly == TRUE) {
     

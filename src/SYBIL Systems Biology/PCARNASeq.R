@@ -1,7 +1,7 @@
 suppressPackageStartupMessages(library("RGalaxy"))
 
 
-PCARNASeq<-function(txiData=GalaxyInputFile(required=T,formatFilter="rdata"),sampleTable=GalaxyInputFile(required=T,formatFilter="tabular"),species=GalaxySelectParam(c("Human","Mouse","Rat","Pig","Cow","Horse","Zebrafish"),required=T),technicalReplicates=GalaxyLogicalParam(),batchCorrect=GalaxyLogicalParam(),supervised=GalaxyLogicalParam(),pcaPlot=GalaxyOutput("PCA", "png"),geneInfluence=GalaxyOutput("geneInfluence","tabular")){
+PCARNASeq<-function(txiData=GalaxyInputFile(required=T,formatFilter="rdata"),sampleTable=GalaxyInputFile(required=T,formatFilter="tabular"),comparisonsTable=GalaxyInputFile(required=F,formatFilter="tabular"),species=GalaxySelectParam(c("Human","Mouse","Rat","Pig","Cow","Horse","Zebrafish"),required=T),technicalReplicates=GalaxyLogicalParam(),batchCorrect=GalaxyLogicalParam(),supervised=GalaxyLogicalParam(),pcaPlot=GalaxyOutput("PCA", "png"),geneInfluence=GalaxyOutput("geneInfluence","tabular")){
   
   #modification of DESeq2 plotPCA function to improve the figure for two experimental factors.
   PCA<- function(object, intgroup, ntop=30000,correctedMatrix)
@@ -76,6 +76,7 @@ PCARNASeq<-function(txiData=GalaxyInputFile(required=T,formatFilter="rdata"),sam
   load(txiData)
   
   sampleTable<-read.delim(sampleTable)
+  comparisonsTable <- read.delim(comparisonsTable,stringsAsFactors = F)
   
   #remove the file info
   sampleTable<-sampleTable[,colnames(sampleTable)!="File"]
@@ -120,7 +121,9 @@ PCARNASeq<-function(txiData=GalaxyInputFile(required=T,formatFilter="rdata"),sam
     }
     
     correctedMatrix <- regressSVs(dat,mod,svseq)
-    correctedMatrix <- correctedMatrix + abs(min(correctedMatrix))
+    
+    #remove the negative values for the log transform -  likely to be lowly expressed
+    correctedMatrix <- correctedMatrix[ !apply(correctedMatrix,1,function(x) any(x<0)),]
     
     dds<-DESeqDataSetFromMatrix(round(correctedMatrix),colData = sampleTable,design = designFormula)
     correctedMatrix<-as.matrix(assay(varianceStabilizingTransformation(dds)))

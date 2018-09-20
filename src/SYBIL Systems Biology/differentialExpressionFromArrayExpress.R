@@ -29,6 +29,8 @@ differentialExpressionFromArrayExpress <- function(
   suppressPackageStartupMessages(library(limma))
   suppressPackageStartupMessages(library(vsn))
   suppressPackageStartupMessages(library(sva))
+  suppressPackageStartupMessages(library(zingeR))
+
   suppressPackageStartupMessages(library(annotationFile,character.only=TRUE))
   
   
@@ -60,7 +62,10 @@ differentialExpressionFromArrayExpress <- function(
   
   getResultsDataFrame<-function(fit2,contrast,numerator,denominator) {
     data<-topTable(fit2,coef=contrast,number=Inf,sort.by = "none")
-    data<-data[,c("logFC","adj.P.Val")]
+    print(dim(data))
+    data <- independentFiltering(data,filter=data$AveExpr, objectType="limma")
+    data<-data[,c("logFC","padjFilter")]
+    print(dim(data))
     colnames(data)<-paste(paste(numerator,denominator,sep="vs"),colnames(data),sep="_")
     return(data)
     

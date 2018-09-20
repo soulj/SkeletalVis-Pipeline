@@ -4,41 +4,228 @@ output: html_notebook
 ---
 
 Make a tsne from the zscores
-```{r}
+```{r message=FALSE}
 library("Rtsne")
 library("plotly")
 library("igraph")
 library("RColorBrewer")
 library("dbscan")
+library("enrichR")
+library("tidyverse")
+library("writexl")
+library("feather")
+library("RankProd")
 
-C <- readRDS(file="similarityMatrixChrDir.RDS")
+
+C <- readRDS(file="data/similarityMatrixChrDir.RDS")
 
 #remove the all NA elements
-C <- C[!apply(C,1,function(x) all(is.na(x)|is.nan(x)|x==0)),]
-C <- C[,!apply(C,2,function(x) all(is.na(x)|is.nan(x)|x==0))]
-
+C <- C[!apply(C,1,function(x) all(is.na(x)|is.nan(x))),]
+C <- C[,!apply(C,2,function(x) all(is.na(x)|is.nan(x)))]
 
 diag(C) <- 0
-# C <- abs(C)
 C <- 1-C
 C[is.nan(C)]<-1
 
 set.seed(42)
 
-tsnes<-lapply(1:500,function(x) tsne <- Rtsne(C,is_distance = T,perplexity = 5,verbose = T,max_iter = 5000))
+#find best tsne
+tsnes<-lapply(1:1000,function(x) tsne <- Rtsne(C,is_distance = T,perplexity = 10,verbose = F,max_iter = 2000))
+save(tsnes,file="results/tsnes_p10_i2000_1000t.RData")
+
 values <- lapply(tsnes,function(x) min(x$costs))
 
-
-res <- dbscan(tsnes[[which.min(abs(unlist(values)))]]$Y,6,minPts = 2)
+res <- dbscan(tsnes[[which.min(abs(unlist(values)))]]$Y,2.5,minPts = 3)
 colours <- c(toupper("#eeeeee"),colorRampPalette(brewer.pal(9, "Set1"))(length(unique(res$cluster))))
 
-accessions <- read.delim("accessions.txt",stringsAsFactors = F)
+accessions <- read.delim("data/accessions.txt",stringsAsFactors = F)
 accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
 
 text<-accessions[match(colnames(C),accessions$combined),"comparisonsText"]
-g <- ggplot(as.data.frame(tsnes[[which.min(abs(unlist(values)))]]$Y),aes(x = V1,y=V2,text=text,color=as.factor(res$cluster))) + geom_point(size=3) + scale_colour_manual(values = colours)+ cowplot::theme_cowplot()
-ggplotly(g, tooltip="text")
+tsneData<-as.data.frame(tsnes[[which.min(abs(unlist(values)))]]$Y)
 
-ggsave(g,filename = "tsne.svg",width = 8,height=5)
+#interactive plot
+g2 <- ggplot(tsneData,aes(x = V1,y=V2,text=text,color=as.factor(res$cluster))) + geom_point(size=3) + scale_colour_manual(values = colours) + cowplot::theme_cowplot()
 
+ggplotly(g2, tooltip="text")
+
+
+#Rename the groups by position
+tsneData$text <- text
+tsneData$accession <- accessions[match(colnames(C),accessions$combined),"combined"]
+clusterData<- tsneData[!res$cluster==0,]
+clusterLabels <- as.data.frame(res$cluster[ !res$cluster==0])
+
+clusterNames <- clusterData %>% 
+               group_by(clusterLabels[,1]) %>% 
+               summarise_at(vars(matches("V")), mean)  %>% arrange(desc(V2))
+clusterNames <- clusterNames$`clusterLabels[, 1]`
+names(clusterNames) <- 1:length(clusterNames)
+clusterLabels <- names(clusterNames)[match(clusterLabels[,1],clusterNames)]
+
+clusterLabels <- data.frame(labels=c(clusterLabels,rep("0",length(res$cluster[res$cluster==0]))))
+clusterData <- rbind(clusterData,tsneData[res$cluster==0,])
+
+#static plot
+g <- ggplot(clusterData,aes(x = V1,y=V2,color=as.factor(clusterLabels$labels))) + geom_point(size=2) + scale_colour_manual(values = colours) + geom_text(data=clusterData %>% 
+               group_by(clusterLabels$labels) %>% 
+               summarise_at(vars(matches("V")), mean),
+             size=3,color="black",label=sort(unique(clusterLabels$labels)),aes(fontface=2)) + cowplot::theme_cowplot()
+
+
+
+ggsave(g,filename = "results/tsne.svg",width = 8,height=5)
+
+```
+
+RankProd consensus signatures for the clusters
+```{r}
+#load the fold change table
+foldChangeTable <- read_feather("data/foldChangeTable.feather")
+
+foldChangeTable.pval <- readRDS("data/foldChangeTablePVal.RDS")
+foldChangeList.pval <- lapply(seq(1, ncol(foldChangeTable.pval), by=2), function(i)
+foldChangeTable.pval[i: pmin((i+1), ncol(foldChangeTable.pval))])
+names(foldChangeList.pval)<-accessions$combined
+expTable <- read.csv("data/expTable.csv")
+
+
+getRPGenes <- function(cluster,foldChangeTable){
+  foldChangeTable <-foldChangeTable[,c("ID",cluster)]
+  foldChangeTable <- foldChangeTable[ apply(foldChangeTable[,-1],1,function(x) length(which(is.na(x)))<(length(x)*0.5)),]
+  rankProd <- RankProducts(data = as.data.frame(foldChangeTable[,-1]),cl = rep(as.factor(1),ncol(foldChangeTable)-1),gene.names = foldChangeTable$ID,na.rm = T)
+  return(genes = rankProd$pfp)
+}
+
+getRPPvalGenes <- function(cluster,foldChangeList.pval){
+  foldChangeTable <-foldChangeList.pval[cluster]
+  foldChangeTable <- lapply(foldChangeTable,"[[",2)
+  foldChangeTable <- bind_cols(foldChangeTable)
+  
+  rankProd <- RankProducts(data = as.data.frame(foldChangeTable),cl = rep(as.factor(1),ncol(foldChangeTable)),gene.names = row.names(foldChangeList.pval[[1]]))
+  return(genes = rankProd$pfp)
+}
+
+getChrDirGenes <- function(cluster,chrDirsList,threshold=2){
+  chrDirs <- chrDirsList[cluster]
+  columns<-unique(unlist(as.data.frame(rbind_list(chrDirs))[,1]))
+  res<-as.data.frame(t(do.call(rbind,lapply(chrDirs,function(x) ifelse(columns %in% x[x[,2]>0,1],1,ifelse(columns %in% x[x[,2]<0,1],-1,0))))))
+  res$Gene <- columns
+  genes <- as.character(res[ apply(res[,-ncol(res)],1,function(x) length(which(x==1))>=threshold | length(which(x==-1))>=threshold),ncol(res)])
+  return(genes)
+}
+
+getPathways <- function(genes,database){
+    pathways <- try(enrichr(genes,database)[[1]])
+    pathways <-pathways[,c(-3,-5,-6)]
+    if(nrow(pathways) >0) {
+      pathways[,3:5] <- signif(pathways[,3:5], digits = 3)
+    }
+    return (pathways)
+}
+
+getComparisonDetails <- function(cluster,accessions,expTable){
+  
+    accessions <- accessions [ accessions$combined %in% cluster,-2]
+    details <- merge(expTable,accessions,by.x="ID",by.y="accession")
+    details <- details[,c(13,12,2,3:9,11)]
+    colnames(details)[1:3] <- c("ID","Comparison","Exp description")
+    
+    return(details)
+    
+}
+
+#dbscan uses zero indexing for the cluster IDs!
+clusters <- lapply(seq_along(unique(clusterLabels$labels))-1,function(x) clusterData$accession[clusterLabels$labels==x])[-1]
+
+clusterDetails <- lapply(clusters,getComparisonDetails,accessions,expTable)
+
+set.seed(42)
+#calculate the rankproducts for all the groups
+RPs <- lapply(clusters,getRPGenes,foldChangeTable)
+
+#keep the sig genes for the summary table
+RPs.sig <- lapply(RPs,function(x) as.data.frame(x[x[,1]<=0.05|x[,2]<=0.05,] ))
+signatures.rp <- lapply(RPs,function(x) rownames(x[x[,1]<=0.05|x[,2]<=0.05,]))
+signatures.rp.up <- lapply(RPs,function(x) rownames(x[x[,2]<=0.05,]))
+signatures.rp.down <- lapply(RPs,function(x) rownames(x[x[,1]<=0.05,]))
+
+source("getEnrichedDrugsForConsensusSignatures.R")
+
+drugs <- mapply(getEnrichedDrugs,signatures.rp.up,signatures.rp.down,SIMPLIFY = F)
+
+
+
+
+
+RPs.sig <- lapply(RPs.sig,function(x) rownames_to_column(x, var = "GeneName"))
+RPs.sig <- lapply(RPs.sig,function(x) {colnames(x)<-c("GeneName", "Down_PFP", "Up_PFP");x})
+
+drugs.mimic <- lapply(drugs,function(x) as.data.frame(x[[1]]))
+drugs.reverse <- lapply(drugs,function(x) as.data.frame(x[[2]]))
+
+names(RPs.sig)<-paste0("Group",1:length(RPs.sig))
+names(clusterDetails)<-paste0("Group",1:length(clusterDetails))
+names(drugs.mimic)<-paste0("Group",1:length(clusterDetails))
+names(drugs.reverse)<-paste0("Group",1:length(clusterDetails))
+
+write_xlsx(clusterDetails,"results/Group_Details.xlsx")
+write_xlsx(RPs.sig,"results/Group_SigRankProduct.xlsx")
+write_xlsx(drugs.mimic,"results/Group_DrugsMimic.xlsx")
+write_xlsx(drugs.reverse,"results/Group_DrugsReverse.xlsx")
+
+```
+What are the most common genes and their enrichment?
+
+Build a table of the most similar datasets - gene perturbation and non- gene pertubations 
+```{r}
+  getTopSimilarities<-function(ID,chrDirZScores,expTable){
+    
+    sim <- chrDirZScores[[ID]]
+    sim <- sort(sim,decreasing = T)
+    print(length(sim))
+    if (length(sim)==0){
+      print(ID)
+      return(NA)
+    }
+    sim <- sim[!grepl(gsub("(.*)_.*", "\\1",ID),names(sim))]
+    
+    #sim<-sim[c(1:3,(length(sim)-3):length(sim))]
+    sim<-sim[c(1:3)]
+    
+    
+    anno <- data.frame(ID2 = names(sim),expTable[match(gsub("(.*)_.*", "\\1",names(sim)),expTable$ID),2:6])
+    query <- expTable[match(gsub("(.*)_.*", "\\1",ID),expTable$ID),2:5]
+    
+    
+    #make the summaryTable
+    sim <- cbind(ID,query,anno,sim)
+    colnames(sim)<- make.names(colnames(sim),unique = T)
+    sim$comparison1 <- accessions [ accessions$combined %in% sim$ID,3]
+    sim$comparison2 <- accessions [ match(sim$ID2,accessions$combined),3]
+    
+      return(sim)
+    
+  }
+  
+  accessions <- read.delim("data/accessions.txt",stringsAsFactors = F)
+  accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
+
+  #get the chrDir sims
+  chrDirZScores <- readRDS("data/chrDirZScores.RDS")
+  
+  #get the gene pertubation experiments
+  expTable <- read.csv("data/expTable.csv",stringsAsFactors = F)
+  expTable <- expTable[ expTable$foldChangeOnly=="FALSE",]
+  genePertubationAccessions <- expTable[grep("Gene perturbation",expTable$ExpType),"ID"]
+  genePertubationIDs <-  unique (grep(paste(genePertubationAccessions,collapse="|"), 
+                          names(chrDirZScores), value=TRUE)) 
+  
+  #get the top similarties and dissimilarities for each pertubation and annotate.
+  similarities <- lapply(genePertubationIDs,getTopSimilarities,chrDirZScores,expTable)
+  names(similarities) <- genePertubationIDs
+  
+  simTable <- rbind_list(similarities)
+  
+write_xlsx(simTable,"results/SupplementryTable_GenePertubationTopAssocations.xlsx")
 ```

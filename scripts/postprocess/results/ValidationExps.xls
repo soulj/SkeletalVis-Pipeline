@@ -1,0 +1,58 @@
+﻿accession,comparison,comparisonsText,combined,Exp
+24361742,1,damagedvsundamaged,24361742_1,HumanKneeOA_Damage
+GSE57218,1,OAvsPreserved,GSE57218_1,HumanKneeOA_Damage
+E-MTAB-4304,1,DamagedvsIntact,E-MTAB-4304_1,HumanKneeOA_Damage
+Cytokine_Explant,1,DMCvsDLC,Cytokine_Explant_1,HumanKneeOA_Damage
+22659600,1,OAvsNonOA,22659600_1,HumanOAvsnonOA
+E-MTAB-6266,1,OAvsnonOA,E-MTAB-6266_1,HumanOAvsnonOA
+E-MTAB-6266_B,2,OA_SubgroupBvsnonOA,E-MTAB-6266_B_2,HumanOAvsnonOA
+GSE114007,1,OAvsNonOA,GSE114007_1,HumanOAvsnonOA
+E-GEOD-10024,2,RASF stimulated chondrocytesvsunstimulated chondrocytes,E-GEOD-10024_2,RA
+GSE55235,2,synovial tissue from rheumatoid arthritis jointvssynovial tissue from healthy joint,GSE55235_2,RA
+GSE7669,1,fibroblasts_RAvsfibroblasts_OA,GSE7669_1,RA
+GSE9329,1,OsteoarthritisvsRhumatoid arthritis,GSE9329_1,RA
+GSE107363,1,HobRAvsHob,GSE107363_1,RA
+GSE30628,1,Col10a1 p.Asn617Lysvswild type,GSE30628_1,MCDS
+GSE72261,2,ColXN617K HZvsWt HZ,GSE72261_2,MCDS
+GSE72261,3,C/X HZvsWt HZ,GSE72261_3,MCDS
+GSE99306,1,X13delChopKO_LHZvsWT_LHZ,GSE99306_1,MCDS
+GSE99306,7,X13del_pHZvsWT_pHZ,GSE99306_7,MCDS
+GSE99306,10,X13del_PZvsWT_PZ,GSE99306_10,MCDS
+GSE99306,13,X13del_UHZvsWT_UHZ,GSE99306_13,MCDS
+GSE31685,1,Interleukin-1beta pre-stimulated and resveratrol treatedvsNK: Interleukin-1beta pre-stimulated,GSE31685_1,IL1B_treatment
+GSE68428,1,untreated + IL1vsuntreated,GSE68428_1,IL1B_treatment
+GSE68428,2,neg vehicle control + IL1vsuntreated,GSE68428_2,IL1B_treatment
+GSE72575,4,IL-1β-stimulated MH7Avsnon-stimulated,GSE72575_4,IL1B_treatment
+GSE75181,2,cultured chondrocytes from cartilage_ctrl_IL1Bvscultured chondrocytes from cartilage_control,GSE75181_2,IL1B_treatment
+GSE104793,1,IL-1b treatedvsUntreated,GSE104793_1,IL1B_treatment
+E-GEOD-6119,1,IL-1vscontrol,E-GEOD-6119_1,IL1B_treatment
+GSE74220,1,IL1BvsControl,GSE74220_1,IL1B_treatment
+E-MTAB-1391,1,X27vsX9,E-MTAB-1391_1,DifferentiatingOsteoblasts
+E-MTAB-1391,2,X27vsX0,E-MTAB-1391_2,DifferentiatingOsteoblasts
+E-MTAB-1391,3,X9vsX0,E-MTAB-1391_3,DifferentiatingOsteoblasts
+GSE53982,1,differentiating MC3T3-E1 cells treated with control scramble shRNAvsproliferating MC3T3-E1 cells treated with control scramble shRNA,GSE53982_1,DifferentiatingOsteoblasts
+GSE53982,2,differentiating MC3T3-E1 cells treated with Runx2-specific shRNAvsdifferentiating MC3T3-E1 cells treated with control scramble shRNA,GSE53982_2,DifferentiatingOsteoblasts
+GSE13604,1,mesenchymal stem cells treated 8 hours with BMP6vsmesenchymal stem cells cultured 8 hours without BMP6,GSE13604_1,TGFB_BMP
+GSE13837,1,TGF stimulated synovial fibroblasts (1h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (0h).rheumatoid arthritis,GSE13837_1,TGFB_BMP
+GSE13837,2,TGF stimulated synovial fibroblasts (2h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (0h).rheumatoid arthritis,GSE13837_2,TGFB_BMP
+GSE13837,3,TGF stimulated synovial fibroblasts (4h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (0h).rheumatoid arthritis,GSE13837_3,TGFB_BMP
+GSE13837,4,TGF stimulated synovial fibroblasts (12h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (0h).rheumatoid arthritis,GSE13837_4,TGFB_BMP
+GSE13837,5,TGF stimulated synovial fibroblasts (1h).osteoarthritisvsTGF stimulated synovial fibroblasts (0h).osteoarthritis,GSE13837_5,TGFB_BMP
+GSE13837,6,TGF stimulated synovial fibroblasts (2h).osteoarthritisvsTGF stimulated synovial fibroblasts (0h).osteoarthritis,GSE13837_6,TGFB_BMP
+GSE13837,7,TGF stimulated synovial fibroblasts (4h).osteoarthritisvsTGF stimulated synovial fibroblasts (0h).osteoarthritis,GSE13837_7,TGFB_BMP
+GSE13837,8,TGF stimulated synovial fibroblasts (12h).osteoarthritisvsTGF stimulated synovial fibroblasts (0h).osteoarthritis,GSE13837_8,TGFB_BMP
+GSE13837,9,TGF stimulated synovial fibroblasts (1h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (1h).osteoarthritis,GSE13837_9,TGFB_BMP
+GSE13837,10,TGF stimulated synovial fibroblasts (2h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (2h).osteoarthritis,GSE13837_10,TGFB_BMP
+GSE13837,11,TGF stimulated synovial fibroblasts (4h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (4h).osteoarthritis,GSE13837_11,TGFB_BMP
+GSE13837,12,TGF stimulated synovial fibroblasts (12h).rheumatoid arthritisvsTGF stimulated synovial fibroblasts (12h).osteoarthritis,GSE13837_12,TGFB_BMP
+E-GEOD-18648,1,TGF-beta1vsnone,E-GEOD-18648_1,TGFB_BMP
+E-GEOD-18648,2,BMP4vsnone,E-GEOD-18648_2,TGFB_BMP
+E-MTAB-2450,1,control.rhBMP2vscontrol.none,E-MTAB-2450_1,TGFB_BMP
+GSE29233,1,TGFb treatedvsUntreated,GSE29233_1,TGFB_BMP
+GSE39795,2,"cartilage, superficial zonevscartilage, deep zone",GSE39795_2,SuperficalvsDeepZone
+E-GEOD-51994,1,SZvsMZ,E-GEOD-51994_1,SuperficalvsDeepZone
+E-GEOD-51994,2,SZvsDZ,E-GEOD-51994_2,SuperficalvsDeepZone
+E-GEOD-54216,1,superficial zonevsintermediate/deep zone,E-GEOD-54216_1,SuperficalvsDeepZone
+GSE66862,1,Eed cKOvsWT,GSE66862_1,Polycomb
+GSE84198,1,Ezh2 KO proximal tibia PZvsWT proximal tibia PZ,GSE84198_1,Polycomb
+GSE84198,2,Ezh2 KO proximal tibia HZvsWT proximal tibia HZ,GSE84198_2,Polycomb

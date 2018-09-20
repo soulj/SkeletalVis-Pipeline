@@ -4,6 +4,7 @@ TF_Enrichment <- function(
   differentialExpression = GalaxyInputFile(required=TRUE),
   species = GalaxyCharacterParam(c("Human","Mouse")),
   foldChangeOnly = GalaxyLogicalParam(),
+  foldchange = GalaxyNumericParam(1.5),
   padj = GalaxyNumericParam(0.05),
   enrichmentTable = GalaxyOutput("TF_EnrichmentTable", "tabular")) {
   
@@ -22,7 +23,7 @@ TF_Enrichment <- function(
       slice(which.max(abs(2))) %>% as.data.frame
     
     
-    differentiallyExpressedGenes<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5),])
+    differentiallyExpressedGenes<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange),])
     geneList<-list(geneSet=differentiallyExpressedGenes[,1])
     
   } else{
@@ -30,7 +31,7 @@ TF_Enrichment <- function(
     differentialExpression<-  differentialExpression %>%
       group_by(GeneSymbol) %>%
       slice(which.min(3)) %>% as.data.frame
-    differentiallyExpressedGenes<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5) & differentialExpression[,3] <=padj,])
+    differentiallyExpressedGenes<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange) & differentialExpression[,3] <=padj,])
     geneList<-list(geneSet=differentiallyExpressedGenes[,1])
   }
   

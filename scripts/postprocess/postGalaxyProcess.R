@@ -7,7 +7,7 @@ library("feather")
 library("taRifx")
 library("purrr")
 
-completed <- read.csv("expTable.csv",stringsAsFactors = F)
+completed <- read.csv("data/expTable.csv",stringsAsFactors = F)
 
 #get the accession numbers which are human
 accession.human<-completed[ completed$Species=="Human"&completed$platform!="RNASeq","ID"]
@@ -19,7 +19,7 @@ accessionListAll<-c()
 
 getOutputFile<-function(accession,foldChangeOnly){
   print(accession)
-  file<-list.files(pattern=accession,path = "output",full.names = T)
+  file<-paste0("output/",accession,"-workflowOutput.csv")
   data<-read.csv(file,stringsAsFactors = F)
   downloadUrls<-data$foldChange[-1]
   
@@ -94,7 +94,6 @@ foldChangeTable.human<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "GeneS
                               foldChanges)
 foldChangeTable.pval.human<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "GeneSymbol", all = TRUE),
                               foldChanges.pval)
-#chrDirs.human <- do.call(rbind,chrDirs.human )
 names(chrDirs.human)<- accession.human
 
 
@@ -106,10 +105,9 @@ foldChangeOnly.mouse<-completed[ completed$Species=="Mouse"&completed$platform!=
 
 homology<-read.delim("ReferenceData/Homology.mouse.txt")
 
-
 getOutputFileMouse<-function(accession,foldChangeOnly){
   print(accession)
-  file<-list.files(pattern=accession,path = "output",full.names = T)
+  file<-list.files(pattern=accession,path = "output/",full.names = T)
   data<-read.csv(file,stringsAsFactors = F)
   downloadUrls<-data$foldChange[-1]
   foldChanges <- sapply(downloadUrls,function(x) {
@@ -202,8 +200,8 @@ foldChangeTable.micro<-merge(foldChangeTable.human,foldChangeTable.mouse, by = "
 foldChangeTable.pval.micro<-merge(foldChangeTable.pval.human,foldChangeTable.pval.mouse, by = "GeneSymbol", all = TRUE)
 
 #get the accession numbers which are from rat
-accession.rat<-completed[ completed$Species=="Rat","ID"]
-foldChangeOnly.rat<-as.logical(completed[ completed$Species=="Rat","foldChangeOnly"])
+accession.rat<-completed[ completed$Species=="Rat"&completed$platform!="RNASeq","ID"]
+foldChangeOnly.rat<-as.logical(completed[ completed$Species=="Rat"&completed$platform!="RNASeq","foldChangeOnly"])
 
 homology<-read.delim("ReferenceData/Homology.rat.txt")
 
@@ -281,7 +279,7 @@ foldChangeOnly.human<-completed[ completed$Species=="Human"& completed$platform=
 
 getOutputRNAFile<-function(accession,foldChangeOnly){
   print(accession)
-  file<-list.files(pattern=paste0(accession,"-workflowOutput.tsv"),path = "output",full.names = T)
+  file<-list.files(pattern=paste0(accession,"-workflowOutput.tsv"),path = "output/",full.names = T)
   data<-read.delim(file,stringsAsFactors = F)
   downloadUrls<-data$foldChange[-1]
   foldChanges <- sapply(downloadUrls,function(x) {
@@ -367,7 +365,7 @@ foldChangeTable.human.pval<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "
 
 getOutputFileRNAMouse<-function(accession,foldChangeOnly){
   print(accession)
-  file<-list.files(pattern=paste0(accession,"-workflowOutput.tsv"),path = "output",full.names = T)
+  file<-list.files(pattern=paste0(accession,"-workflowOutput.tsv"),path = "output/",full.names = T)
   data<-read.delim(file,stringsAsFactors = F)
   downloadUrls<-data$foldChange[-1]
   foldChanges <- sapply(downloadUrls,function(x) {
@@ -422,7 +420,7 @@ getOutputFileRNAMouse<-function(accession,foldChangeOnly){
   foldChanges.pval<-data.frame(GeneSymbol=NA,t(rep(c(NA,NA),length(downloadUrls))))
   
 }
-  downloadUrl<-data$chrDirTable[1]
+  downloadUrl<-data[1,"chrDirTable"]
   downloadUrl<-gsub(pattern = '/?preview=True',replacement = "",downloadUrl)
   downloadUrl<-gsub(pattern = 'http://localhost:8080/',replacement = "http://localhost:8080/datasets/",downloadUrl)
   destFile<-tempfile()
@@ -433,8 +431,8 @@ getOutputFileRNAMouse<-function(accession,foldChangeOnly){
     chrDir<-read.delim(destFile)
     chrDirs<- lapply(seq_along(downloadUrls),function(x,chrDir) {
       chrDir <- chrDir[ chrDir$comparisonNumber == x,]
-      chrDir<-chrDir[ chrDir$GeneSymbol %in% homology[,3],]
-      homoloGene<-homology[match(chrDir$GeneSymbol,homology[,3]),4]
+      chrDir<-chrDir[ chrDir$gene_name %in% homology[,3],]
+      homoloGene<-homology[match(chrDir$gene_name,homology[,3]),4]
       chrDir$ID<-homoloGene
 
       chrDir <- chrDir %>%
@@ -472,7 +470,6 @@ foldChangeTable.pval.mouse<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "
 foldChangeTable.rna<-merge(foldChangeTable.human,foldChangeTable.mouse, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
 foldChangeTable.pval.rna<-merge(foldChangeTable.human.pval,foldChangeTable.pval.mouse, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
 
-
 #get the accession numbers which are pig
 accession.pig.rna<-completed[ completed$Species=="Pig"& completed$platform=="RNASeq","ID"]
 foldChangeOnly.pig<-completed[ completed$Species=="Pig"& completed$platform=="RNASeq","foldChangeOnly"]
@@ -495,6 +492,33 @@ foldChangeTable.pval.pig<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "Ge
 
 foldChangeTable.rna<-merge(foldChangeTable.rna,foldChangeTable.pig, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
 foldChangeTable.pval.rna<-merge(foldChangeTable.pval.rna,foldChangeTable.pval.pig, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
+
+
+####
+#Rat RNA-seq
+
+#get the accession numbers which are rat
+accession.rat.rna<-completed[ completed$Species=="Rat"& completed$platform=="RNASeq","ID"]
+foldChangeOnly.rat<-completed[ completed$Species=="Rat"& completed$platform=="RNASeq","foldChangeOnly"]
+
+homology<-read.delim("ReferenceData/Homology.rat.txt",stringsAsFactors = F)
+
+foldChanges<-mapply(FUN = getOutputFileRNAMouse,accession.rat.rna,foldChangeOnly.rat)
+
+foldChanges.pval <- foldChanges[seq(2,length(foldChanges),by=3)]
+chrDirs.rnaseq.rat <- foldChanges[seq(3,length(foldChanges),by=3)]
+foldChanges <- foldChanges[seq(1,length(foldChanges),by=3)]
+
+names(chrDirs.rnaseq.rat) <- accession.rat.rna
+
+foldChangeTable.rat<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "GeneSymbol", all = TRUE),
+                            foldChanges)
+
+foldChangeTable.pval.rat<-Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = "GeneSymbol", all = TRUE),
+                                 foldChanges.pval)
+
+foldChangeTable.rna<-merge(foldChangeTable.rna,foldChangeTable.rat, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
+foldChangeTable.pval.rna<-merge(foldChangeTable.pval.rna,foldChangeTable.pval.rat, by.x= "GeneSymbol",by.y="GeneSymbol",all = TRUE)
 
 #####################
 #merge all the data frames together
@@ -524,7 +548,6 @@ datasetID <- paste(accessions$accession,accessions$comparison,sep="_")
 
 
 
-
 comparisons<- sapply(unique(accessions$accession),function(accession){
   print(accession)
   comparisonsTable <- read.delim(paste0("~/Sybil/Shiny/data/",accession,"/",accession,"_comparisons.txt"))
@@ -541,8 +564,10 @@ write.table(accessions,file="accessions.txt",col.names=T,row.names=F,sep="\t",qu
 getZScores<-function(profile,C){
   zscores<-C[-profile,profile]
   rownames(zscores)<-rownames(C[-profile,profile])
+  #zscores<-zscores[order(zscores[,1]),]
   return(zscores)
 }
+
 
 cos.sim <- function(ix,X) {
   A = X[ix[1],]
@@ -557,9 +582,9 @@ rownames(C)<-colnames(foldChangeTable)
 
 accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
 zscores<-lapply(1:nrow(C),getZScores,C)
-#names(zscores)<-colnames(C)
 names(zscores)<-datasetID
 saveRDS(zscores,file="simZScores.RDS")
+
 
 
 jaccard<-function(set1,set2){
@@ -671,13 +696,14 @@ C <- matrix(apply(cmb,1,signedJaccardSigCreate,foldChangeListUp.pval,foldChangeL
 colnames(C)<- datasetID
 rownames(C)<- datasetID
 
+
 zscores<-lapply(1:nrow(C),getZScores,C)
 names(zscores)<-datasetID
 
 saveRDS(zscores,file="jaccPvalZScores.RDS")
 
-#get all the chdir together and calculate signed jaccard similarity
-chrDirs <- c(chrDirs.human,chrDirs.mouse,chrDirs.rat,chrDirs.pig,chrDirs.cow,chrDirs.rnaseq.human,chrDirs.rnaseq.mouse,chrDirs.rnaseq.pig)
+#get all the chdir together and do signed jaccard simimilarity
+chrDirs <- c(chrDirs.human,chrDirs.mouse,chrDirs.rat,chrDirs.pig,chrDirs.cow,chrDirs.rnaseq.human,chrDirs.rnaseq.mouse,chrDirs.rnaseq.rat,chrDirs.rnaseq.pig)
 
 chrDirs <- unlist(chrDirs,recursive = F)
 names(chrDirs)<-datasetID
@@ -757,13 +783,11 @@ mergedZscores<-mapply(FUN = function(x,y,z,a) {
 
 save(mergedZscores,file="mergedZscores.RDS")
 
-
-foldChangeTable[is.na(foldChangeTable)]<-0
 foldChangeTable$ID <- rownames(foldChangeTable)
 write_feather(foldChangeTable, "foldChangeTable.RDS")
 
 #make a folder for the sharedResponses
-dataDir<-"similarity/"
+dataDir<-"~/Sybil/Shiny/data/similarity/"
 dir.create(dataDir)
 
 #write each of the dataframes to the folder
@@ -781,10 +805,12 @@ saveRDS(foldChangeListUp.pval,file="foldChangeListUp.pval.RDS",compress = F)
 saveRDS(foldChangeListDown.pval,file="foldChangeListDown.pval.RDS",compress = F)
 
 
+#create a homology mapping file
+
 #mouse
 homology.mouse<-read.delim("ReferenceData/Homology.mouse.txt",stringsAsFactors = F)
 #rat
-homology.rat<-read.delim("/ReferenceData/Homology.rat.txt",stringsAsFactors = F)
+homology.rat<-read.delim("ReferenceData/Homology.rat.txt",stringsAsFactors = F)
 #cow
 homology.cow<-read.delim("ReferenceData/Homology.cow.txt",stringsAsFactors = F)
 #pig
@@ -839,7 +865,24 @@ zebrafish <- lapply(zebrafish,function(x) {
 })
 
 human2otherspecies <- merge.list(human2otherspecies,zebrafish)
+
+
 human2otherspecies <- lapply(human2otherspecies,function(x) stack(x))
 human2otherspecies <- map_df(human2otherspecies, ~as.data.frame(.x), .id="id")
+
 colnames(human2otherspecies) <- c("humanGene","queryGene","species")
+
+
 write_feather(human2otherspecies,path ="human2otherspecies.feather")
+
+foldChangeTable.pval <- readRDS("foldChangeTablePVal.RDS")
+foldChangeList.pval <- lapply(seq(1, ncol(foldChangeTable.pval), by=2), function(i)
+  foldChangeTable.pval[i: pmin((i+1), ncol(foldChangeTable.pval))])
+names(foldChangeList.pval)<-accessions$combined
+
+foldChangeList.pval <- lapply(foldChangeList.pval,function(x) x[,2,drop=F])
+foldChangeList.pval <- mapply(FUN = function(x,y) {colnames(x) <- y; x},foldChangeList.pval,names(foldChangeList.pval),SIMPLIFY = F)
+pvalTable <- bind_cols(foldChangeList.pval)
+pvalTable$GeneName <- rownames(foldChangeList.pval[[1]])
+write_feather(pvalTable,path = "pvalTable.feather")
+

@@ -1,0 +1,88 @@
+--- performPCA.xml.bak	2016-06-27 12:45:29.201680505 +0000
++++ performPCA.xml	2016-06-27 13:13:33.195369592 +0000
+@@ -3,21 +3,28 @@
+   <command interpreter="Rscript --vanilla">performPCA.R
+        #if str($inputfile1).strip() != "":
+           --inputfile1="$inputfile1"
++          ## Provide name meta data as an extra arg.
++          --inputfile1Name="$inputfile1.dataset.display_name"
+        #end if
+        #if str($inputfile2).strip() != "":
+           --inputfile2="$inputfile2"
++          --inputfile2Name="$inputfile2.dataset.display_name"
+        #end if
+        #if str($inputfile3).strip() != "":
+           --inputfile3="$inputfile3"
++          --inputfile3Name="$inputfile3.dataset.display_name"
+        #end if
+        #if str($inputfile4).strip() != "":
+           --inputfile4="$inputfile4"
++          --inputfile4Name="$inputfile4.dataset.display_name"
+        #end if
+        #if str($inputfile5).strip() != "":
+           --inputfile5="$inputfile5"
++          --inputfile5Name="$inputfile5.dataset.display_name"
+        #end if
+        #if str($inputfile6).strip() != "":
+           --inputfile6="$inputfile6"
++          --inputfile6Name="$inputfile6.dataset.display_name"
+        #end if
+        #if str($outputLegend).strip() != "":
+           --outputLegend="$outputLegend"
+@@ -25,24 +32,6 @@
+        #if str($outputPlot).strip() != "":
+           --outputPlot="$outputPlot"
+        #end if
+-       #if str($inputfile1Name).strip() != "":
+-          --inputfile1Name="$inputfile1Name"
+-       #end if
+-       #if str($inputfile2Name).strip() != "":
+-          --inputfile2Name="$inputfile2Name"
+-       #end if
+-       #if str($inputfile3Name).strip() != "":
+-          --inputfile3Name="$inputfile3Name"
+-       #end if
+-       #if str($inputfile4Name).strip() != "":
+-          --inputfile4Name="$inputfile4Name"
+-       #end if
+-       #if str($inputfile5Name).strip() != "":
+-          --inputfile5Name="$inputfile5Name"
+-       #end if
+-       #if str($inputfile6Name).strip() != "":
+-          --inputfile6Name="$inputfile6Name"
+-       #end if
+ 
+ 2&gt;&amp;1</command>
+   <inputs>
+@@ -64,24 +53,6 @@
+     <param optional="true" name="inputfile6" type="data" help="Affymetrix CEL Data File Format" label="Inputfile6">
+       <validator type="empty_field" message="This field is required."/>
+     </param>
+-    <param optional="true" name="inputfile1Name" type="text" help="" size="60" label="Inputfile1 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+-    <param optional="true" name="inputfile2Name" type="text" help="" size="60" label="Inputfile2 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+-    <param optional="true" name="inputfile3Name" type="text" help="" size="60" label="Inputfile3 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+-    <param optional="true" name="inputfile4Name" type="text" help="" size="60" label="Inputfile4 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+-    <param optional="true" name="inputfile5Name" type="text" help="" size="60" label="Inputfile5 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+-    <param optional="true" name="inputfile6Name" type="text" help="" size="60" label="Inputfile6 Name">
+-      <validator type="empty_field" message="This field is required."/>
+-    </param>
+   </inputs>
+   <outputs>
+     <data format="tabular" name="outputLegend" label="SampleLegend.tabular"/>
+@@ -99,4 +70,4 @@ analysis for them.
+ The output of above eample should be a lattice plot figure for the
+ variances of samples between the first two pricipal components
+ </help>
+-</tool>
+\ No newline at end of file
++</tool>

@@ -332,10 +332,7 @@ getMicroarrayExpressionData<-function(accessionNumber=GalaxyCharacterParam(),
       pData(expData)<-pdata
       
     }
-    if(remove==TRUE){
-      expData<-expData[,!sampleNames(expData)==removeSample]
-    }
-    
+
     setwd("..")
   }
   
@@ -348,6 +345,11 @@ getMicroarrayExpressionData<-function(accessionNumber=GalaxyCharacterParam(),
       pData(expData)[splitField]<-trimws(sapply(strsplit(as.character(pData(expData)[,splitField]),split = splitSep),"[[",splitPos))
     }
     
+  }
+  
+  if(remove==TRUE){
+    removeSample <- strsplit(removeSample,"_AND_",fixed = F)[[1]]
+    expData<-expData[,!sampleNames(expData) %in% removeSample]
   }
   
   

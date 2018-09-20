@@ -73,7 +73,7 @@ characteristicDirectionFromArrayExpress <- function(
     results.top500$comparison <- paste(numerator,denominator,sep="vs")
     results.top500$comparisonNumber <- comparisonNum
     colnames(results.top500)[1:2] <- c("ID","chrDir")
-    
+    s
     return(results.top500)
     
   }
@@ -104,14 +104,14 @@ characteristicDirectionFromArrayExpress <- function(
   comparisonsTable<-read.delim(comparisonsTable,header=T,stringsAsFactors = F)
   
   if (foldChangeOnly == TRUE) {
-    return("need replicates to perfrom characteristic direction analysis")
+    return("need replicates to perform characteristic direction analysis")
   }
   
-  if ("Paired2" %in% colnames(comparisonsTable)){
-    
-    return("characteristic direction cannot take into account paired samples")
-    
-  }
+  # if ("Paired2" %in% colnames(comparisonsTable)){
+  #   
+  #   return("characteristic direction cannot take into account paired samples")
+  #   
+  # }
   
   
   if (platform=="Affy"){
@@ -184,14 +184,50 @@ characteristicDirectionFromArrayExpress <- function(
     
   }   else if (platform == "2C-Agilent"){
     
-    return("can not perform characteristic direction on 2C arrays")
-   
+    ## normalize within and between arrays
+    eset <- limma::backgroundCorrect(inputfile, method="normexp", offset=50)
+    eset<-limma::normalizeWithinArrays(eset,method="loess")
+    eset<-limma::normalizeBetweenArrays(eset,method="Aquantile")
+    
+    #aggregate the duplicated gene probes
+    annotationFile<-gsub(".db",replacement = "",annotationFile)
+    geneIDs <- na.omit(stack(mget(as.character(eset$genes$ProbeName), get(paste(annotationFile,"SYMBOL",sep="")), ifnotfound = NA)))
+    
+    eset<-eset[ which(eset$genes$ProbeName %in% geneIDs$ind),]
+    eset$genes$GeneName<-geneIDs$values
+    eset<-avereps(eset, eset$genes$GeneName)
+    
+    Cy3<-comparisonsTable[1,"Cy3"]
+    Cy5<-comparisonsTable[1,"Cy5"]
+    eset$targets<-data.frame(FileName=colnames(eset$M),Cy5=gsub(' +',' ',eset$targets[,Cy5]),Cy3=gsub(' +',' ',eset$targets[,Cy3]))
+    
+    exprs <- exprs.MA(eset)
+    targets <- data.frame(as.vector(t(cbind(as.character(eset$targets$Cy5),as.character(eset$targets$Cy3)))))
+    colnames(targets)<-comparisonsTable$Factor[1]
+    
+    rownames(exprs) <- rownames(eset$M)
+    
+    eset <- ExpressionSet(assayData = as.matrix(exprs),
+                          phenoData = new("AnnotatedDataFrame", as.data.frame(targets)))
+  
+  
   }
   
   ###characteristic direction analysis#####
   
     #test for multiple factors to combine
-    if ("Factor2" %in% colnames(comparisonsTable)){
+  
+  if (platform == "2C-Agilent"){
+    
+    comparisonsTable <- comparisonsTable[,c(5,4,3)]
+    
+    #make the comparisons
+    resultsTable<- lapply(1:nrow(comparisonsTable), function(x) getResultsDataFrame(x,exprs,eset,comparisonsTable))
+    resultsTable<-do.call(rbind,resultsTable)
+    write.table(resultsTable,file=chrDirTable,col.names=T,row.names=F,sep="\t",quote=F)
+    return()
+    
+  } else if ("Factor2" %in% colnames(comparisonsTable)){
       Factor1<-unique(as.character(comparisonsTable[,1]))
       Factor2<-unique(as.character(comparisonsTable[,2]))
       factors<-paste(Factor1,Factor2,sep=".")
@@ -227,6 +263,8 @@ characteristicDirectionFromArrayExpress <- function(
       designFormula <- as.formula(paste("~0+", paste(factors[2:1], collapse=" + ")))
       design<-model.matrix(designFormula,data = factorValues)
       colnames(design)<-make.names(colnames(design))
+      comparisonsTable$Paired2<-make.names(comparisonsTable$Paired2)
+      pData(eset)[,Factor2]<-make.names(pData(eset)[,Factor2])
       
     } else {
       #define the experimental conditions (factors)
@@ -236,10 +274,11 @@ characteristicDirectionFromArrayExpress <- function(
       colnames(pData(eset))<-gsub("/| ,:",".",colnames(pData(eset)))
       comparisonsTable[,1]<-gsub("/| ,:",".",comparisonsTable[,1])
       factorValues<-pData(eset)[factors]
-      if(any(grepl("+/+|-/-", factorValues[,1]))){
+      if(any(grepl("+/+|-/-|+", factorValues[,1]))){
         factorValues[,1]<-gsub(x = factorValues[,1],pattern = "+/+",replacement = "WT",fixed = T)
         factorValues[,1]<-gsub(x = factorValues[,1],pattern = "-/-",replacement = "KO",fixed=T)
         factorValues[,1]<-gsub(x = factorValues[,1],pattern = "+/-",replacement = "HET",fixed=T)
+        factorValues[,1]<-gsub(x = factorValues[,1],pattern = "+",replacement = ".",fixed=T)
       }
       if(any(grepl("^[[:digit:]]", factorValues[,1]))){
         factorValues<-as.data.frame(apply(factorValues,2,make.names))
@@ -251,6 +290,8 @@ characteristicDirectionFromArrayExpress <- function(
       colnames(design)<-make.names(colnames(design))
       
     }
+  
+  if (!"Paired2" %in% colnames(comparisonsTable)){
     
     #sva batch effect correction
     mod0 = model.matrix(~1,data=factorValues)
@@ -261,17 +302,24 @@ characteristicDirectionFromArrayExpress <- function(
       exprs<-regressSVs(exprs,design,svafit)
     }
     
-    if(any(grepl("+/+|-/-", pData(eset)[[factors]]))){
+    if(any(grepl("+/+|-/-|+|-", pData(eset)[[factors]]))){
       pData(eset)[[factors]]<-gsub(x = pData(eset)[[factors]],pattern = "+/+",replacement = "WT",fixed = T)
       pData(eset)[[factors]]<-gsub(x = pData(eset)[[factors]],pattern = "-/-",replacement = "KO",fixed=T)
       pData(eset)[[factors]]<-gsub(x = pData(eset)[[factors]],pattern = "+/-",replacement = "HET",fixed=T)
+      pData(eset)[[factors]]<-gsub(x = factorValues[,1],pattern = "+",replacement = ".",fixed=T)
+      pData(eset)[[factors]]<-gsub(x = factorValues[,1],pattern = "-",replacement = ".",fixed=T)
+      comparisonsTable[,2]<-gsub(x=comparisonsTable[,2],pattern = "-",replacement = ".",fixed=T)
+      comparisonsTable[,3]<-gsub(x=comparisonsTable[,3],pattern = "-",replacement = ".",fixed=T)
+      comparisonsTable[,2]<-gsub(x=comparisonsTable[,2],pattern = "+",replacement = ".",fixed=T)
+      comparisonsTable[,3]<-gsub(x=comparisonsTable[,3],pattern = "+",replacement = ".",fixed=T)
+      
     }
     if(any(grepl("^[[:digit:]]", pData(eset)[[factors]]))){
       
       pData(eset)[[factors]]<-make.names(pData(eset)[[factors]])
       
     }
-    
+  }
 
   #make the comparisons
   resultsTable<- lapply(1:nrow(comparisonsTable), function(x) getResultsDataFrame(x,exprs,eset,comparisonsTable))

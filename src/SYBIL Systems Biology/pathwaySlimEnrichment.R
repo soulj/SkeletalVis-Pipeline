@@ -5,6 +5,7 @@ pathwaySlimEnrichment <- function(
   geneExonLengths = GalaxyInputFile(required = T, formatFilter = "tabular"),
   species=GalaxySelectParam(c("Human","Mouse","Rat","Horse","Zebrafish","Cow","Pig")),
   foldChangeOnly = GalaxyLogicalParam(),
+  foldchange = GalaxyNumericParam(1.5),
   padj = GalaxyNumericParam(0.05),
   slimEnrichmentPathways     = GalaxyOutput("slimEnrichmentPathways", "tabular"),
   slimEnrichmentPlot     = GalaxyOutput("slimEnrichmentPlot", "png")) {
@@ -90,12 +91,12 @@ pathwaySlimEnrichment <- function(
       slice(which.max(abs(2))) %>% as.data.frame
     
     
-    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5),])
+    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange),])
   } else{
     differentialExpression<-  differentialExpression %>%
       group_by(GeneSymbol) %>%
       slice(which.min(3)) %>% as.data.frame
-    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(1.5) & differentialExpression[,3] <=padj,])
+    differentialExpression.sig<-na.omit(differentialExpression[ abs(differentialExpression[,2])>=log2(foldchange) & differentialExpression[,3] <=padj,])
   }
   
   #get the enriched pathways

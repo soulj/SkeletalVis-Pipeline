@@ -6,15 +6,16 @@ output: html_notebook
 Set up the data
 ```{r}
 library(tidyverse)
+library(writexl)
 #load the accessions
-accessions <- read.delim("accessions.txt",stringsAsFactors = F)
+accessions <- read.delim("data/accessions.txt",stringsAsFactors = F)
 accessions$combined <- paste0(accessions$accession,"_",accessions$comparison)
 
 #Load the experiment table
 expTable<-read_csv(file = "data/expTable.csv")
 
 #load the similarity scores
-load(file = "mergedZscores.RDS")
+load(file = "data/mergedZscores.RDS")
 ```
 
 Summary of data at exp level
@@ -43,7 +44,7 @@ dataNames<-c(`Tissue` = "Tissue",
                     `platform` = "Platform")
 
 ggplot(annotationTable,aes(x=Variable,y=Count,fill=Type))+geom_bar(stat="identity",fill="darkgrey")+facet_wrap(~Type,scale='free_x',labeller = as_labeller(dataNames)) + cowplot::theme_cowplot(font_size = 24) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),legend.position="none") + scale_fill_brewer(palette = "Set2") + ylab("Number of Experiments") + xlab("")
-ggsave("expSummary.png",device = "png",width = 8,height = 8)
+ggsave("results/expSummary.png",device = "png",width = 8,height = 8)
 ```
 
 Summary of data at comparison level
@@ -73,8 +74,37 @@ dataNames<-c(`Tissue` = "Tissue",
                     `platform` = "Platform")
 
 ggplot(annotationTable,aes(x=Variable,y=Count,fill=Type))+geom_bar(stat="identity",fill="darkgrey")+facet_wrap(~Type,scale='free_x',labeller = as_labeller(dataNames)) + cowplot::theme_cowplot(font_size = 24) + theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),legend.position="none") + scale_fill_brewer(palette = "Set2") + ylab("Number of Expression Responses")  + xlab("")
-ggsave("comparisonSummary.png",device = "png",width = 8,height = 8)
+ggsave("results/comparisonSummary.png",device = "png",width = 8,height = 8)
 ```
+Make summary table
+```{r}
+annotationTable<- merge(accessions,expTable,by.x="accession",by.y="ID")
+
+foldChangeTable.pval <- readRDS("data/foldChangeTablePVal.RDS")
+foldChangeList.pval <- lapply(seq(1, ncol(foldChangeTable.pval), by=2), function(i)
+foldChangeTable.pval[i: pmin((i+1), ncol(foldChangeTable.pval))])
+names(foldChangeList.pval)<-accessions$combined
+
+expGenes<- apply(foldChangeTable,2,function(x) length(na.omit(x)))
+expGenes[ expGenes==0] <- NA
+
+#load the signature lists for the response comparisons
+upSigs <- readRDS(file="data/foldChangeListUp.pval.RDS")
+downSigs <- readRDS(file="data/foldChangeListDown.pval.RDS")
+
+sigDiffExpGenes <- mapply(function(x,y) length(c(x,y)),upSigs,downSigs)
+
+annotationTable$sigDiffExpGenes <- sigDiffExpGenes[annotationTable$combined]
+annotationTable[ annotationTable$foldChangeOnly=="TRUE","sigDiffExpGenes"] <- NA
+
+colnames(annotationTable)[4] <- "Accession"
+
+write_xlsx(annotationTable,path="results/SupplementryTable2_SummaryofDatasets.xlsx")
+
+```
+
+
+
 
 Valdidation of the similarity scores
 ```{r}
@@ -82,17 +112,19 @@ annotationTable<- merge(accessions,expTable,by.x="accession",by.y="ID")
 annotationTable <- annotationTable[ annotationTable$foldChangeOnly == "FALSE",]
 mergedZscores <- lapply( mergedZscores,function(x) x[x[,1] %in% annotationTable$combined,])
 
-HumanKneeOA_Damage <-c("GSE57218_1","GSE57218_2","E-MTAB-4304_1")
+HumanOA_Damage <-c("GSE57218_1","E-MTAB-4304_1","24361742_1","Cytokine_Explant_1")
+HumanOAvsnonOA <-c("E-MTAB-6266_1","E-MTAB-6266_B_2","E-MTAB-6266_B_2","22659600_1","GSE114007_1")
 RA <-c("GSE107363_1","E-GEOD-10024_2","GSE55235_2","GSE7669_1","GSE9329_1")
 MCDS <- c("GSE72261_2","GSE72261_3","GSE99306_1","GSE99306_7","GSE99306_10","GSE99306_13","GSE30628_1")
-IL1B_treatment <- c("E-GEOD-6119_1","GSE104793_1","GSE68428_2","GSE72575_4","GSE75181_2")
+IL1B_treatment <- c("E-GEOD-6119_1","GSE104793_1","GSE68428_1","GSE68428_2","GSE72575_4","GSE75181_2","GSE74220_1","GSE31685_1")
 DifferentiatingOsteoblasts <- c("GSE53982_1","GSE53982_2","E-MTAB-1391_1","E-MTAB-1391_2","E-MTAB-1391_3")
-TGFB_BMP <- c("GSE13604_1","E-GEOD-18648_1","E-GEOD-18648_2","E-MTAB-2450_1","GSE29233_1","GSE13837_1","GSE13837_2","GSE13837_3","GSE13837_4","GSE13837_5","GSE13837_6","GSE13837_7","GSE13837_8","GSE13837_9","GSE13837_10","GSE13837_11","GSE13837_12")
+TGFB_BMP <- c("GSE13604_1","E-GEOD-18648_1","E-GEOD-18648_2","E-MTAB-2450_1","GSE29233_1","GSE13837_1","GSE13837_2","GSE13837_3",
+              "GSE13837_4","GSE13837_5","GSE13837_6","GSE13837_7","GSE13837_8","GSE13837_9","GSE13837_10","GSE13837_11","GSE13837_12")
 SuperficalvsDeepZone <- c("E-GEOD-51994_2","E-GEOD-51994_1","E-GEOD-54216_1","GSE39795_2")
 Polycomb <- c("GSE66862_1","GSE84198_1","GSE84198_2")
 
-comparisons <-list(HumanKneeOA_Damage,RA,MCDS,IL1B_treatment,DifferentiatingOsteoblasts,TGFB_BMP,SuperficalvsDeepZone,Polycomb)
-names(comparisons) <- c("HumanKneeOA_Damage","RA","MCDS","IL1B_treatment","DifferentiatingOsteoblasts","TGFB_BMP","SuperficalvsDeepZone","Polycomb")
+comparisons <-list(HumanOA_Damage,HumanOAvsnonOA,RA,MCDS,IL1B_treatment,DifferentiatingOsteoblasts,TGFB_BMP,SuperficalvsDeepZone,Polycomb)
+names(comparisons) <- c("HumanKneeOA_Damage","HumanOAvsnonOA","RA","MCDS","IL1B_treatment","DifferentiatingOsteoblasts","TGFB_BMP","SuperficalvsDeepZone","Polycomb")
 
 
 dat <- mapply(function(x,y) {
@@ -104,7 +136,7 @@ dat <- mapply(function(x,y) {
 
 dat <- rbind_list(dat)
 
-write_excel_csv(dat,path = "ValidationExps.xls")
+write_excel_csv(dat,path = "results/ValidationExps.xls")
 
 
 getRankSimilarity <- function(comparisons,mergedZscores){
@@ -114,9 +146,8 @@ getRankSimilarity <- function(comparisons,mergedZscores){
 
   ranks <- mapply(function(x,y) {
     x <- cbind(x[,"comparisonID",drop=F],apply(-x[,-1],2,rank,ties.method= "random"))
-    print(y)
     y <- gsub("(.*)_.*", "\\1",y)
-    print(y)
+    #remove comparisons from the same exp
     x <- x[ -grep(y,x[,1]),]
     x},scores,comparisons,SIMPLIFY =F )
   
@@ -141,13 +172,12 @@ boxplot(similarityData$value ~ similarityData$key)
 
 ggplot(similarityData,aes(x=value,col=key)) + geom_line(stat="Density",size=2) + cowplot::theme_cowplot(font_size = 20) + scale_x_continuous(name = "Rank") + scale_y_continuous(name = "Density")+ theme(legend.title=element_blank()) + scale_color_manual(labels = c("Characteristic Direction Jaccard", "Fold Change Cosine","Fold Change Jaccard","Significance Jaccard"),values=c("blue","red","green","orange")) + theme(legend.position = c(0.3, 0.8))
 
-# ggplot(similarityData,aes(y=value,x=key)) + geom_violin(fill="darkgrey") + cowplot::theme_cowplot(font_size = 20) + theme(legend.title=element_blank()) + scale_y_continuous(name = "Rank") + scale_x_discrete(name = "Similarity Method")
 
-ggsave(filename = "validation.png",width = 7,height=4)
+ggsave(filename = "results/validation.png",width = 7,height=4)
 
 ```
 Assessment of bias in the data
-```{r}
+```{r }
 Species <- c("Mouse","Rat","Human")
 Platform <-c("RNASeq","Affy","Illumina","1C-Agilent")
 Tissue <- c("Bone","Cartilage","Synovium")
@@ -176,16 +206,15 @@ similarities <- lapply(comparisonsAll,getSimilarity,mergedZscores)
 
 
 g <- lapply(similarities, function(x) {
-    # 
-    # ggplot(x,aes(x=key,y=value)) + geom_violin(fill="darkgrey") + cowplot::theme_cowplot(font_size = 20) + theme(legend.title=element_blank()) + scale_y_continuous(name = "Rank") + scale_x_discrete(name = "Method")
+
   ggplot(x,aes(x=value,col=key)) + geom_line(stat="Density",size=2) + cowplot::theme_cowplot(font_size = 20) + scale_x_continuous(name = "Rank") + scale_y_continuous(name = "Density")+ theme(legend.title=element_blank()) +  scale_color_manual(labels = c("Characteristic Direction Jaccard", "Fold Change Cosine","Fold Change Jaccard","Significance Jaccard"),values=c("blue","red","green","orange"))
 
   })
 
 
-ggsave(g[[1]],filename = "bias_species.svg",width = 10,height=7)
-ggsave(g[[2]],filename = "bias_platform.svg",width = 10,height=7)
-ggsave(g[[3]],filename = "bias_tissue.svg",width = 10,height=7)
+ggsave(g[[1]],filename = "results/bias_species.svg",width = 10,height=7)
+ggsave(g[[2]],filename = "results/bias_platform.svg",width = 10,height=7)
+ggsave(g[[3]],filename = "results/bias_tissue.svg",width = 10,height=7)
 
 ```
 
